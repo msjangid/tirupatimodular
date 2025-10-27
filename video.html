@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Videos - Furniture Showcase</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="css/styles.css" rel="stylesheet">
+</head>
+<body class="bg-gray-50">
+    <!-- Header -->
+    <header class="bg-white shadow-md">
+        <div class="container mx-auto px-4 py-6 flex items-center justify-between">
+            <div class="flex items-center">
+                <img src="assets/images/logo.png" alt="Logo" class="h-12 w-auto">
+                <h1 class="text-2xl font-bold text-gray-800 ml-4">Tirupati Trader Associates</h1>
+            </div>
+        </div>
+    </header>
+
+    <!-- Video Content -->
+    <main class="container mx-auto px-4 py-12">
+        <h2 class="text-3xl font-bold text-gray-800 mb-8">Product Videos</h2>
+        
+        <div class="grid md:grid-cols-2 gap-8">
+            <!-- First Video Player -->
+            <div class="bg-white rounded-lg shadow-md overflow-hidden">
+                <video 
+                    class="w-full aspect-video" 
+                    controls 
+                    preload="metadata"
+                >
+                    <source src="assets/images/pic10.mp4" type="video/mp4">
+                    Your browser does not support the video tag.
+                </video>
+                <div class="p-4">
+                    <h3 class="text-xl font-semibold text-gray-800">Kitchen Showcase</h3>
+                    <p class="text-gray-600 mt-2">Watch our latest kitchen collection in action.</p>
+                </div>
+            </div>
+
+            <!-- Second Video Player -->
+            <div class="bg-white rounded-lg shadow-md overflow-hidden">
+                <video 
+                    class="w-full aspect-video" 
+                    controls 
+                    preload="metadata"
+                >
+                    <source src="assets/images/bdv.mp4" type="video/mp4">
+                    Your browser does not support the video tag.
+                </video>
+                <div class="p-4">
+                    <h3 class="text-xl font-semibold text-gray-800">Bedroom Collection</h3>
+                    <p class="text-gray-600 mt-2">Explore our bedroom furniture designs.</p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Navigation Footer -->
+    <footer class="bg-gray-800 text-white py-6 mt-12">
+        <nav class="container mx-auto px-4">
+            <ul class="flex flex-wrap justify-center space-x-6">
+                <li><a href="index.html" class="hover:text-gray-300">Home</a></li>
+                <li><a href="video.html" class="hover:text-gray-300">Product Videos</a></li>
+                <li><a href="about.html" class="hover:text-gray-300">About Us</a></li>
+                <li><a href="contact.html" class="hover:text-gray-300">Contact Us</a></li>
+            </ul>
+        </nav>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const videos = document.querySelectorAll('video');
+            
+            videos.forEach(video => {
+                // Add loading state
+                video.addEventListener('loadstart', () => {
+                    video.classList.add('opacity-50');
+                });
+                
+                // Remove loading state
+                video.addEventListener('canplay', () => {
+                    video.classList.remove('opacity-50');
+                });
+
+                // Error handling
+                video.addEventListener('error', () => {
+                    const container = video.parentElement;
+                    container.innerHTML = `
+                        <div class="flex items-center justify-center h-64 bg-gray-100">
+                            <p class="text-red-500">Failed to load video. Please try again later.</p>
+                        </div>
+                    `;
+                });
+            });
+        });
+    </script>
+</body>
+</html> 
