@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Details</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 p-8">
+    <div class="max-w-4xl mx-auto bg-white rounded-lg shadow-lg overflow-hidden">
+        <img id="detailImage" src="" alt="Product Image" class="w-full h-auto">
+        <div class="p-6">
+            <p id="detailDescription" class="text-gray-700 text-lg"></p>
+        </div>
+    </div>
+    <script>
+        window.onload = function() {
+            const params = new URLSearchParams(window.location.search);
+            const imageSrc = params.get('image');
+            const description = params.get('description');
+            
+            const detailImage = document.getElementById('detailImage');
+            const detailDescription = document.getElementById('detailDescription');
+            
+            if (imageSrc) {
+                detailImage.src = imageSrc;
+                detailImage.alt = 'Product Detail';
+            }
+            
+            if (description) {
+                detailDescription.textContent = decodeURIComponent(description);
+            } else {
+                detailDescription.textContent = 'No description available';
+            }
+        };
+    </script>
+</body>
+</html>

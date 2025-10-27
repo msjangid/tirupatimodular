@@ -1,0 +1,17 @@
+{
+  "name": "furniture-showcase",
+  "version": "1.0.0",
+  "description": "Furniture Showcase Website",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "nodemon server.js"
+  },
+  "dependencies": {
+    "express": "^4.17.1",
+    "xlsx": "^0.18.5"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.15"
+  }
+} 
