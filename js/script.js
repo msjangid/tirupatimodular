@@ -32,10 +32,10 @@ class Carousel {
 
         this.images = [
             'Assets/images/carousel1.jpg',
-            'Assets/images/carousel2.jpg',
-            'Assets/images/carousel3.jpg',
+            'Assets/images/carousel2.JPG',
+            'Assets/images/carousel3.JPG',
             'Assets/images/carousel4.jpg',
-            'Assets/images/carousel5.jpg'
+            'Assets/images/carousel5.JPG'
         ];
 
         this.init();
@@ -44,11 +44,14 @@ class Carousel {
     async init() {
         try {
             console.log('Initializing carousel...');
+            console.log('Carousel images:', this.images);
             this.showLoading();
             await this.loadImages();
+            console.log('All carousel images loaded successfully');
             this.initCarousel();
             this.bindEvents();
             this.startAutoPlay();
+            console.log('Carousel initialization completed');
         } catch (error) {
             console.error('Carousel initialization failed:', error);
             this.showErrorMessage();
@@ -187,15 +190,15 @@ class ProductGrid {
         this.grid = document.getElementById('productGrid');
         this.products = [
             { name: 'Bed Room', image: 'Assets/images/bd1.jpg', price: 'Custom' },
-            { name: 'Bed Room', image: 'Assets/images/bd2.jpg', price: 'Custom' },
+            { name: 'Bed Room', image: 'Assets/images/bd2.JPG', price: 'Custom' },
             { name: 'Bed Room', image: 'Assets/images/bd3.jpg', price: 'Custom' },
             { name: 'Bed Room', image: 'Assets/images/bd4.jpg', price: 'Custom' },
-            { name: 'Dining Table', image: 'Assets/images/d1.jpg', price: 'Custom' },
-            { name: 'Dining Table', image: 'Assets/images/d2.jpg', price: 'Custom' },
+            { name: 'Dining Table', image: 'Assets/images/D1.JPG', price: 'Custom' },
+            { name: 'Dining Table', image: 'Assets/images/D2.jpg', price: 'Custom' },
             { name: 'Kitchen', image: 'Assets/images/k1.jpg', price: 'Custom' },
             { name: 'Kitchen', image: 'Assets/images/k2.jpg', price: 'Custom' },
             { name: 'Kitchen', image: 'Assets/images/k3.jpg', price: 'Custom' },
-            { name: 'Living Room', image: 'Assets/images/l1.jpg', price: 'Custom' }
+            { name: 'Living Room', image: 'Assets/images/l1.JPG', price: 'Custom' }
         ];
         this.init();
     }
@@ -214,21 +217,59 @@ class ProductGrid {
         this.products.forEach((product, index) => {
             const container = document.createElement('div');
             container.className =
-                'product-container bg-white rounded-lg shadow-md overflow-hidden opacity-0 transition-opacity duration-700';
+                'product-container bg-white rounded-lg shadow-md overflow-hidden opacity-0 transition-opacity duration-700 cursor-pointer';
             container.style.transitionDelay = `${index * 100}ms`;
 
             container.innerHTML = `
                 <div class="relative overflow-hidden group">
                     <img src="${product.image}" alt="${product.name}"
                          class="w-full h-64 object-cover transition-transform duration-300 group-hover:scale-110">
+                    <div class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-20 transition-all duration-300 flex items-center justify-center">
+                        <span class="text-white opacity-0 group-hover:opacity-100 text-sm font-medium">Click to view</span>
+                    </div>
                 </div>
                 <div class="p-4">
                     <h3 class="text-lg font-semibold text-gray-800">${product.name}</h3>
                     <p class="text-gray-600 mt-1">${product.price}</p>
                 </div>
             `;
+            
+            // Add click event to open zoom modal
+            container.addEventListener('click', () => {
+                this.openZoomModal(product.image, product.name);
+            });
+            
             this.grid.appendChild(container);
         });
+    }
+
+    openZoomModal(imageSrc, description) {
+        console.log('Opening zoom modal for:', imageSrc);
+        const zoomModal = document.getElementById('zoomModal');
+        const zoomImage = document.getElementById('zoomImage');
+        const zoomDescription = document.getElementById('zoomDescription');
+        const zoomResult = document.getElementById('zoomResult');
+        
+        if (zoomModal && zoomImage && zoomDescription && zoomResult) {
+            // Preload image before showing modal
+            const img = new Image();
+            img.onload = () => {
+                zoomImage.src = imageSrc;
+                zoomDescription.textContent = description || 'Product Image';
+                zoomResult.style.backgroundImage = `url(${imageSrc})`;
+                zoomModal.classList.remove('hidden');
+                
+                // Setup magnifier effect
+                this.setupMagnifier(zoomImage, zoomResult);
+                console.log('Zoom modal opened successfully');
+            };
+            img.onerror = () => {
+                console.error('Failed to load image for modal:', imageSrc);
+            };
+            img.src = imageSrc;
+        } else {
+            console.error('Modal elements not found');
+        }
     }
 
     addScrollAnimation() {
@@ -245,18 +286,143 @@ class ProductGrid {
             observer.observe(container);
         });
     }
+
+    setupMagnifier(img, result) {
+        const lens = document.getElementById('lens');
+        if (!lens) return;
+
+        const magnifyLevel = 2;
+        
+        img.addEventListener('mousemove', (e) => {
+            const rect = img.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+            
+            // Position lens
+            lens.style.left = (x - lens.offsetWidth / 2) + 'px';
+            lens.style.top = (y - lens.offsetHeight / 2) + 'px';
+            lens.style.display = 'block';
+            
+            // Calculate zoom position
+            const fx = (x / img.offsetWidth) * 100;
+            const fy = (y / img.offsetHeight) * 100;
+            
+            result.style.backgroundPosition = `${fx}% ${fy}%`;
+            result.style.backgroundSize = `${img.offsetWidth * magnifyLevel}px ${img.offsetHeight * magnifyLevel}px`;
+        });
+        
+        img.addEventListener('mouseleave', () => {
+            lens.style.display = 'none';
+        });
+    }
 }
 
 // =====================
-// 📱 Mobile Menu Toggle
+// �️ Modal Functions
+// =====================
+function closeModal() {
+    const imageModal = document.getElementById('imageModal');
+    if (imageModal) {
+        imageModal.classList.add('hidden');
+    }
+}
+
+function closeZoomModal() {
+    const zoomModal = document.getElementById('zoomModal');
+    if (zoomModal) {
+        zoomModal.classList.add('hidden');
+    }
+}
+
+// Close modals when clicking outside
+document.addEventListener('click', (e) => {
+    const zoomModal = document.getElementById('zoomModal');
+    const imageModal = document.getElementById('imageModal');
+    
+    if (e.target === zoomModal) {
+        closeZoomModal();
+    }
+    if (e.target === imageModal) {
+        closeModal();
+    }
+});
+
+// Close modal with Escape key
+document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+        closeModal();
+        closeZoomModal();
+    }
+});
+
+// =====================
+//  Enhanced Mobile Menu Toggle
 // =====================
 const mobileMenuBtn = document.getElementById('mobileMenuBtn');
 const mobileMenu = document.getElementById('mobileMenu');
 
 if (mobileMenuBtn && mobileMenu) {
-    mobileMenuBtn.addEventListener('click', () => {
-        mobileMenu.classList.toggle('hidden');
+    let isMenuOpen = false;
+    
+    mobileMenuBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        toggleMobileMenu();
     });
+    
+    // Close menu when clicking outside
+    document.addEventListener('click', (e) => {
+        if (isMenuOpen && !mobileMenu.contains(e.target) && !mobileMenuBtn.contains(e.target)) {
+            closeMobileMenu();
+        }
+    });
+    
+    // Close menu when pressing Escape
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && isMenuOpen) {
+            closeMobileMenu();
+        }
+    });
+    
+    function toggleMobileMenu() {
+        if (isMenuOpen) {
+            closeMobileMenu();
+        } else {
+            openMobileMenu();
+        }
+    }
+    
+    function openMobileMenu() {
+        isMenuOpen = true;
+        mobileMenuBtn.classList.add('active');
+        mobileMenu.classList.remove('hidden');
+        
+        // Trigger animation after element is visible
+        setTimeout(() => {
+            mobileMenu.classList.add('show');
+        }, 10);
+        
+        // Add smooth slide-in animation to menu items
+        const menuItems = mobileMenu.querySelectorAll('.mobile-menu-item');
+        menuItems.forEach((item, index) => {
+            item.style.opacity = '0';
+            item.style.transform = 'translateX(-20px)';
+            setTimeout(() => {
+                item.style.transition = 'all 0.3s ease';
+                item.style.opacity = '1';
+                item.style.transform = 'translateX(0)';
+            }, 100 + (index * 50));
+        });
+    }
+    
+    function closeMobileMenu() {
+        isMenuOpen = false;
+        mobileMenuBtn.classList.remove('active');
+        mobileMenu.classList.remove('show');
+        
+        setTimeout(() => {
+            mobileMenu.classList.add('hidden');
+        }, 300);
+    }
 }
 
 // =====================
@@ -266,4 +432,10 @@ document.addEventListener('DOMContentLoaded', () => {
     console.log('DOM loaded, initializing components...');
     new Carousel();
     new ProductGrid();
+    
+    // Setup modal close buttons
+    const closeZoomBtn = document.getElementById('closeZoomModal');
+    if (closeZoomBtn) {
+        closeZoomBtn.addEventListener('click', closeZoomModal);
+    }
 });
