@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Responsive Test - Innovative Modular Studio</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="css/styles.css" rel="stylesheet">
+    <style>
+        .device-frame {
+            border: 2px solid #374151;
+            border-radius: 12px;
+            overflow: hidden;
+            margin: 1rem;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+        }
+        .device-header {
+            background: #374151;
+            color: white;
+            padding: 0.5rem;
+            text-align: center;
+            font-size: 0.875rem;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 p-4">
+    <div class="max-w-7xl mx-auto">
+        <h1 class="text-3xl font-bold text-gray-800 mb-8 text-center">Responsive Design Test</h1>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+            <!-- Mobile View -->
+            <div class="device-frame">
+                <div class="device-header">📱 Mobile (320px - 640px)</div>
+                <div class="bg-white" style="width: 320px; height: 568px; overflow-y: auto;">
+                    <iframe src="index.html" width="320" height="568" style="transform: scale(0.8); transform-origin: top left; width: 400px; height: 710px;"></iframe>
+                </div>
+            </div>
+
+            <!-- Tablet View -->
+            <div class="device-frame">
+                <div class="device-header">📱 Tablet (641px - 1024px)</div>
+                <div class="bg-white" style="width: 768px; height: 1024px; overflow-y: auto;">
+                    <iframe src="index.html" width="768" height="1024" style="transform: scale(0.6); transform-origin: top left; width: 1280px; height: 1707px;"></iframe>
+                </div>
+            </div>
+
+            <!-- Desktop View -->
+            <div class="device-frame">
+                <div class="device-header">🖥️ Desktop (1025px+)</div>
+                <div class="bg-white" style="width: 1200px; height: 800px; overflow-y: auto;">
+                    <iframe src="index.html" width="1200" height="800" style="transform: scale(0.5); transform-origin: top left; width: 2400px; height: 1600px;"></iframe>
+                </div>
+            </div>
+        </div>
+
+        <!-- Feature Testing Section -->
+        <div class="mt-12 bg-white rounded-lg shadow-lg p-6">
+            <h2 class="text-2xl font-bold mb-6">Responsive Features Test</h2>
+            
+            <div class="grid md:grid-cols-2 gap-6">
+                <div>
+                    <h3 class="text-lg font-semibold mb-3">✅ Mobile Features</h3>
+                    <ul class="space-y-2 text-sm">
+                        <li>• Responsive carousel (250px height on mobile)</li>
+                        <li>• Touch-friendly navigation buttons</li>
+                        <li>• Mobile-optimized product grid</li>
+                        <li>• Collapsible hamburger menu</li>
+                        <li>• Mobile-friendly notifications</li>
+                        <li>• WhatsApp button positioning</li>
+                        <li>• Form inputs prevent iOS zoom</li>
+                        <li>• Touch-friendly modal controls</li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h3 class="text-lg font-semibold mb-3">🎯 Breakpoint Tests</h3>
+                    <div class="space-y-2 text-sm">
+                        <div class="p-2 bg-red-100 sm:bg-yellow-100 md:bg-green-100 lg:bg-blue-100 xl:bg-purple-100 rounded">
+                            <span class="block sm:hidden">📱 XS: < 640px (Red)</span>
+                            <span class="hidden sm:block md:hidden">📱 SM: 640px+ (Yellow)</span>
+                            <span class="hidden md:block lg:hidden">💻 MD: 768px+ (Green)</span>
+                            <span class="hidden lg:block xl:hidden">🖥️ LG: 1024px+ (Blue)</span>
+                            <span class="hidden xl:block">🖥️ XL: 1280px+ (Purple)</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Device Detection -->
+            <div class="mt-6 p-4 bg-gray-50 rounded-lg">
+                <h4 class="font-semibold mb-2">Current Device Info:</h4>
+                <div id="deviceInfo" class="text-sm space-y-1"></div>
+            </div>
+        </div>
+
+        <!-- Quick Actions -->
+        <div class="mt-8 flex flex-wrap gap-4 justify-center">
+            <a href="index.html" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg transition">View Homepage</a>
+            <a href="contact.html" class="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-lg transition">Test Contact Form</a>
+            <a href="video.html" class="bg-purple-600 hover:bg-purple-700 text-white px-6 py-3 rounded-lg transition">Check Video Page</a>
+        </div>
+    </div>
+
+    <script>
+        // Display device information
+        function updateDeviceInfo() {
+            const info = document.getElementById('deviceInfo');
+            const width = window.innerWidth;
+            const height = window.innerHeight;
+            const ratio = window.devicePixelRatio || 1;
+            const touch = 'ontouchstart' in window;
+            const userAgent = navigator.userAgent;
+            
+            let deviceType = 'Desktop';
+            if (width < 640) deviceType = 'Mobile';
+            else if (width < 1024) deviceType = 'Tablet';
+            
+            info.innerHTML = `
+                <div><strong>Screen:</strong> ${width} × ${height}px</div>
+                <div><strong>Device Type:</strong> ${deviceType}</div>
+                <div><strong>Pixel Ratio:</strong> ${ratio}x</div>
+                <div><strong>Touch Support:</strong> ${touch ? 'Yes' : 'No'}</div>
+                <div><strong>Orientation:</strong> ${width > height ? 'Landscape' : 'Portrait'}</div>
+                <div><strong>User Agent:</strong> ${userAgent.substring(0, 60)}...</div>
+            `;
+        }
+
+        // Update on load and resize
+        updateDeviceInfo();
+        window.addEventListener('resize', updateDeviceInfo);
+        window.addEventListener('orientationchange', () => {
+            setTimeout(updateDeviceInfo, 100);
+        });
+
+        // Test notification system
+        setTimeout(() => {
+            if (typeof showNotification === 'function') {
+                showNotification('Responsive design test loaded successfully!', 'success');
+            }
+        }, 1000);
+    </script>
+</body>
+</html>

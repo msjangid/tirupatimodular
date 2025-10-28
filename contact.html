@@ -9,21 +9,88 @@
 </head>
 <body class="bg-gray-50">
     <!-- Header -->
-    <header class="bg-white shadow-md">
-        <div class="container mx-auto px-4 py-6 flex items-center justify-between">
-            <div class="flex items-center">
-                <img src="Assets/images/logo.png" alt="Logo" class="h-12 w-auto">
-                <h1 class="text-2xl font-bold text-gray-800 ml-4">Innovative Modular Studio</h1>
+    <header class="bg-white/95 backdrop-blur-md shadow-lg border-b border-gray-200/50">
+        <div class="container mx-auto px-4 py-6">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center">
+                    <img src="Assets/images/logo.png" alt="Innovative Modular Studio Logo" class="h-10 sm:h-12 lg:h-16 w-auto">
+                    <h1 class="hidden sm:block text-lg sm:text-xl lg:text-2xl font-bold text-gray-800 ml-2 lg:ml-4">Innovative Modular Studio</h1>
+                </div>
+                <nav class="hidden md:flex items-center space-x-2">
+                    <a href="index.html" class="nav-link flex items-center px-4 py-2 text-gray-700 hover:text-blue-600 font-medium rounded-lg hover:bg-blue-50 transition-all duration-300 group">
+                        <svg class="w-4 h-4 mr-2 text-gray-500 group-hover:text-blue-600 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
+                        </svg>
+                        Home
+                    </a>
+                    <a href="video.html" class="nav-link flex items-center px-4 py-2 text-gray-700 hover:text-blue-600 font-medium rounded-lg hover:bg-blue-50 transition-all duration-300 group">
+                        <svg class="w-4 h-4 mr-2 text-gray-500 group-hover:text-blue-600 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"/>
+                        </svg>
+                        Videos
+                    </a>
+                    <a href="about.html" class="nav-link flex items-center px-4 py-2 text-gray-700 hover:text-blue-600 font-medium rounded-lg hover:bg-blue-50 transition-all duration-300 group">
+                        <svg class="w-4 h-4 mr-2 text-gray-500 group-hover:text-blue-600 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                        </svg>
+                        About
+                    </a>
+                    <a href="contact.html" class="nav-link flex items-center px-4 py-2 text-white bg-gradient-to-r from-blue-600 to-blue-700 font-medium rounded-lg shadow-lg">
+                        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+                        </svg>
+                        Contact
+                    </a>
+                </nav>
+                <!-- Mobile menu button -->
+                <div class="md:hidden">
+                    <button type="button" class="mobile-menu-toggle relative p-2 rounded-lg bg-gray-100 hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-300 transition-all duration-300" id="mobileMenuBtn" aria-label="Toggle navigation menu">
+                        <div class="hamburger-icon w-6 h-6 flex flex-col justify-center items-center space-y-1">
+                            <span class="hamburger-line block w-5 h-0.5 bg-gray-700 rounded transition-all duration-300"></span>
+                            <span class="hamburger-line block w-5 h-0.5 bg-gray-700 rounded transition-all duration-300"></span>
+                            <span class="hamburger-line block w-5 h-0.5 bg-gray-700 rounded transition-all duration-300"></span>
+                        </div>
+                    </button>
+                </div>
+            </div>
+            <!-- Mobile menu -->
+            <div class="mobile-menu hidden md:hidden mt-4 bg-white/95 backdrop-blur-md rounded-xl shadow-2xl border border-gray-200/50 overflow-hidden" id="mobileMenu">
+                <div class="flex flex-col">
+                    <a href="index.html" class="mobile-menu-item flex items-center text-gray-700 hover:text-blue-600 hover:bg-blue-50 font-medium px-6 py-4 transition-all duration-300 border-b border-gray-100">
+                        <svg class="w-5 h-5 mr-3 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
+                        </svg>
+                        Home
+                    </a>
+                    <a href="video.html" class="mobile-menu-item flex items-center text-gray-700 hover:text-blue-600 hover:bg-blue-50 font-medium px-6 py-4 transition-all duration-300 border-b border-gray-100">
+                        <svg class="w-5 h-5 mr-3 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"/>
+                        </svg>
+                        Product Videos
+                    </a>
+                    <a href="about.html" class="mobile-menu-item flex items-center text-gray-700 hover:text-blue-600 hover:bg-blue-50 font-medium px-6 py-4 transition-all duration-300 border-b border-gray-100">
+                        <svg class="w-5 h-5 mr-3 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                        </svg>
+                        About Us
+                    </a>
+                    <a href="contact.html" class="mobile-menu-item flex items-center text-blue-600 bg-blue-50 font-medium px-6 py-4 transition-all duration-300">
+                        <svg class="w-5 h-5 mr-3 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+                        </svg>
+                        Contact Us
+                    </a>
+                </div>
             </div>
         </div>
     </header>
 
     <!-- Contact Content -->
-    <main class="container mx-auto px-4 py-12">
+    <main class="container mx-auto px-2 sm:px-4 py-6 sm:py-12">
         <div class="max-w-4xl mx-auto">
-            <h2 class="text-3xl font-bold text-gray-800 mb-8">Contact Us</h2>
+            <h2 class="text-2xl sm:text-3xl font-bold text-gray-800 mb-6 sm:mb-8 text-center">Contact Us</h2>
             
-            <div class="grid md:grid-cols-2 gap-8">
+            <div class="contact-grid-tablet grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8">
                 <!-- Contact Form -->
                 <div class="bg-white rounded-lg shadow-md p-6">
                     <form id="contactForm" class="space-y-4" method="POST" action="/save-contact" novalidate>
@@ -32,8 +99,8 @@
                                 Name
                             </label>
                             <input type="text" id="name" name="name" required
-                                   class="w-full px-4 py-2 border rounded-md focus:ring-2 
-                                          focus:ring-blue-500 focus:border-blue-500">
+                                   class="form-input w-full px-4 py-2 border border-gray-300 rounded-md 
+                                          transition-all duration-300">
                         </div>
                         
                         <div>
@@ -41,8 +108,8 @@
                                 Email
                             </label>
                             <input type="email" id="email" name="email" required
-                                   class="w-full px-4 py-2 border rounded-md focus:ring-2 
-                                          focus:ring-blue-500 focus:border-blue-500">
+                                   class="form-input w-full px-4 py-2 border border-gray-300 rounded-md 
+                                          transition-all duration-300">
                         </div>
                         
                         <div>
@@ -50,8 +117,8 @@
                                 Phone
                             </label>
                             <input type="tel" id="phone" name="phone"
-                                   class="w-full px-4 py-2 border rounded-md focus:ring-2 
-                                          focus:ring-blue-500 focus:border-blue-500">
+                                   class="form-input w-full px-4 py-2 border border-gray-300 rounded-md 
+                                          transition-all duration-300">
                         </div>
                         
                         <div>
@@ -59,15 +126,22 @@
                                 Message
                             </label>
                             <textarea id="message" name="message" rows="4" required
-                                      class="w-full px-4 py-2 border rounded-md focus:ring-2 
-                                             focus:ring-blue-500 focus:border-blue-500"></textarea>
+                                      class="form-input w-full px-4 py-2 border border-gray-300 rounded-md 
+                                             transition-all duration-300 resize-vertical"></textarea>
                         </div>
                         
                         <div id="formStatus" class="text-sm mt-2"></div>
-                        <button type="submit" 
+                        <button type="submit" id="submitBtn"
                                 class="w-full bg-gray-800 text-white py-2 px-4 rounded-md 
-                                       hover:bg-gray-700 transition-colors duration-300">
-                            Send Message
+                                       hover:bg-gray-700 transition-colors duration-300 
+                                       disabled:opacity-50 disabled:cursor-not-allowed">
+                            <span id="submitText">Send Message</span>
+                            <span id="submitSpinner" class="hidden ml-2">
+                                <svg class="animate-spin h-4 w-4 inline" fill="none" viewBox="0 0 24 24">
+                                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                </svg>
+                            </span>
                         </button>
                     </form>
                 </div>
@@ -109,55 +183,300 @@
     </footer>
 
     <script>
-       document.getElementById('contactForm').addEventListener('submit', async function(e) {
-            e.preventDefault();
+        // Enhanced contact form with notifications and better UX
+        document.addEventListener('DOMContentLoaded', function() {
+            const contactForm = document.getElementById('contactForm');
             const status = document.getElementById('formStatus');
-            status.textContent = '';
-            status.className = 'text-sm mt-2';
+            const submitBtn = document.getElementById('submitBtn');
+            const submitText = document.getElementById('submitText');
+            const submitSpinner = document.getElementById('submitSpinner');
 
-            // Basic HTML5 validation
-            if (!this.checkValidity()) {
-                status.textContent = 'Please fill all required fields correctly.';
-                status.classList.add('text-red-600');
-                return;
-            }
-
-            // Gather form data
-            const formData = {
-                name: this.name.value.trim(),
-                email: this.email.value.trim(),
-                phone: this.phone.value.trim(),
-                message: this.message.value.trim()
-            };
-
-            // Show loading
-            status.textContent = 'Sending...';
-            status.classList.add('text-blue-600');
-
-            try {
-                const response = await fetch(this.action, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(formData)
-                });
-
-                if (response.ok) {
-                    status.textContent = 'Thank you for your message! We will get back to you soon.';
-                    status.className = 'text-green-600 text-sm mt-2';
-                    this.reset();
-                } else {
-                    throw new Error('Failed to submit form');
+            // Enhanced form validation
+            function validateForm(formData) {
+                const errors = [];
+                
+                if (!formData.name || formData.name.length < 2) {
+                    errors.push('Name must be at least 2 characters long');
                 }
-            } catch (error) {
-                status.textContent = 'Sorry, there was an error submitting your message. Please try again later.';
-                status.className = 'text-red-600 text-sm mt-2';
+                
+                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                if (!formData.email || !emailRegex.test(formData.email)) {
+                    errors.push('Please enter a valid email address');
+                }
+                
+                if (formData.phone && !/^\+?[\d\s\-\(\)]{10,}$/.test(formData.phone)) {
+                    errors.push('Please enter a valid phone number');
+                }
+                
+                if (!formData.message || formData.message.length < 10) {
+                    errors.push('Message must be at least 10 characters long');
+                }
+                
+                return errors;
             }
+
+            // Show notification with auto-dismiss
+            function showNotification(message, type = 'info', duration = 5000) {
+                // Create notification element
+                const notification = document.createElement('div');
+                const isMobile = window.innerWidth < 640;
+                const baseClasses = isMobile 
+                    ? 'notification-mobile fixed top-4 left-4 right-4 z-50 p-3 sm:p-4 rounded-lg shadow-lg transition-all duration-300 transform translate-x-full'
+                    : 'fixed top-4 right-4 z-50 p-4 rounded-lg shadow-lg max-w-sm transition-all duration-300 transform translate-x-full';
+                
+                notification.className = baseClasses;
+                
+                // Set colors based on type
+                const colors = {
+                    success: 'bg-green-500 text-white',
+                    error: 'bg-red-500 text-white',
+                    warning: 'bg-yellow-500 text-black',
+                    info: 'bg-blue-500 text-white'
+                };
+                
+                notification.className += ` ${colors[type] || colors.info}`;
+                
+                notification.innerHTML = `
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center">
+                            <span class="mr-2">${getIcon(type)}</span>
+                            <span>${message}</span>
+                        </div>
+                        <button onclick="this.parentElement.parentElement.remove()" class="ml-4 text-xl leading-none">&times;</button>
+                    </div>
+                `;
+                
+                document.body.appendChild(notification);
+                
+                // Animate in
+                setTimeout(() => {
+                    notification.classList.remove('translate-x-full');
+                }, 100);
+                
+                // Auto dismiss
+                if (duration > 0) {
+                    setTimeout(() => {
+                        notification.classList.add('translate-x-full');
+                        setTimeout(() => notification.remove(), 300);
+                    }, duration);
+                }
+            }
+
+            function getIcon(type) {
+                const icons = {
+                    success: '✓',
+                    error: '✗',
+                    warning: '⚠',
+                    info: 'ℹ'
+                };
+                return icons[type] || icons.info;
+            }
+
+            // Set loading state
+            function setLoading(loading) {
+                submitBtn.disabled = loading;
+                if (loading) {
+                    submitText.textContent = 'Sending...';
+                    submitSpinner.classList.remove('hidden');
+                } else {
+                    submitText.textContent = 'Send Message';
+                    submitSpinner.classList.add('hidden');
+                }
+            }
+
+            // Update form status
+            function updateStatus(message, type) {
+                status.textContent = message;
+                status.className = 'text-sm mt-2';
+                
+                const typeClasses = {
+                    success: 'text-green-600',
+                    error: 'text-red-600',
+                    warning: 'text-yellow-600',
+                    info: 'text-blue-600'
+                };
+                
+                if (typeClasses[type]) {
+                    status.classList.add(typeClasses[type]);
+                }
+            }
+
+            // Enhanced form submission
+            contactForm.addEventListener('submit', async function(e) {
+                e.preventDefault();
+                
+                // Reset status
+                updateStatus('', '');
+                
+                // Gather and validate form data
+                const formData = {
+                    name: this.name.value.trim(),
+                    email: this.email.value.trim(),
+                    phone: this.phone.value.trim(),
+                    message: this.message.value.trim(),
+                    timestamp: new Date().toISOString(),
+                    userAgent: navigator.userAgent
+                };
+
+                // Validate form
+                const errors = validateForm(formData);
+                if (errors.length > 0) {
+                    updateStatus(errors[0], 'error');
+                    showNotification(errors.join(', '), 'error');
+                    return;
+                }
+
+                // Set loading state
+                setLoading(true);
+                updateStatus('Sending your message...', 'info');
+
+                try {
+                    // Try to submit to server first
+                    const response = await fetch('/save-contact', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(formData)
+                    });
+
+                    if (response.ok) {
+                        // Server submission successful
+                        updateStatus('Thank you! Your message has been sent successfully.', 'success');
+                        showNotification('Message sent successfully! We will get back to you soon.', 'success');
+                        this.reset();
+                    } else {
+                        throw new Error('Server error');
+                    }
+                } catch (error) {
+                    console.log('Server submission failed, trying fallback methods...');
+                    
+                    // Fallback 1: Try to save to localStorage for later
+                    try {
+                        const savedMessages = JSON.parse(localStorage.getItem('contactMessages') || '[]');
+                        savedMessages.push(formData);
+                        localStorage.setItem('contactMessages', JSON.stringify(savedMessages));
+                        
+                        updateStatus('Message saved locally. We will contact you soon!', 'warning');
+                        showNotification('Your message has been saved. We will get back to you!', 'warning');
+                        
+                        // Also open WhatsApp as fallback
+                        setTimeout(() => {
+                            const whatsappMessage = `Hello! I'm ${formData.name}. Email: ${formData.email}. Phone: ${formData.phone}. Message: ${formData.message}`;
+                            const whatsappURL = `https://wa.me/917207534088?text=${encodeURIComponent(whatsappMessage)}`;
+                            showNotification('Opening WhatsApp for direct contact...', 'info');
+                            window.open(whatsappURL, '_blank');
+                        }, 2000);
+                        
+                        this.reset();
+                    } catch (fallbackError) {
+                        // Final fallback: Email composition
+                        updateStatus('Unable to send automatically. Please contact us directly.', 'error');
+                        showNotification('Please contact us directly via phone or WhatsApp.', 'error');
+                        
+                        const emailSubject = `Contact Form Submission from ${formData.name}`;
+                        const emailBody = `Name: ${formData.name}\nEmail: ${formData.email}\nPhone: ${formData.phone}\nMessage: ${formData.message}`;
+                        const mailtoURL = `mailto:tirupatitraderassociate2021@gmail.com?subject=${encodeURIComponent(emailSubject)}&body=${encodeURIComponent(emailBody)}`;
+                        
+                        setTimeout(() => {
+                            window.location.href = mailtoURL;
+                        }, 2000);
+                    }
+                } finally {
+                    setLoading(false);
+                }
+            });
+
+            // Add real-time validation feedback
+            const inputs = contactForm.querySelectorAll('input, textarea');
+            inputs.forEach(input => {
+                input.addEventListener('blur', function() {
+                    this.classList.remove('border-red-500', 'border-green-500');
+                    
+                    if (this.required && !this.value.trim()) {
+                        this.classList.add('border-red-500');
+                    } else if (this.value.trim()) {
+                        if (this.type === 'email' && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(this.value)) {
+                            this.classList.add('border-red-500');
+                        } else {
+                            this.classList.add('border-green-500');
+                        }
+                    }
+                });
+            });
+
+            // Show welcome message
+            setTimeout(() => {
+                showNotification('Welcome! Feel free to contact us for any inquiries.', 'info', 3000);
+            }, 1000);
         });
+
+        // Mobile Menu Toggle (same functionality as main page)
+        const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+        const mobileMenu = document.getElementById('mobileMenu');
+        
+        if (mobileMenuBtn && mobileMenu) {
+            let isMenuOpen = false;
+            
+            mobileMenuBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                toggleMobileMenu();
+            });
+            
+            document.addEventListener('click', (e) => {
+                if (isMenuOpen && !mobileMenu.contains(e.target) && !mobileMenuBtn.contains(e.target)) {
+                    closeMobileMenu();
+                }
+            });
+            
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape' && isMenuOpen) {
+                    closeMobileMenu();
+                }
+            });
+            
+            function toggleMobileMenu() {
+                if (isMenuOpen) {
+                    closeMobileMenu();
+                } else {
+                    openMobileMenu();
+                }
+            }
+            
+            function openMobileMenu() {
+                isMenuOpen = true;
+                mobileMenuBtn.classList.add('active');
+                mobileMenu.classList.remove('hidden');
+                
+                setTimeout(() => {
+                    mobileMenu.classList.add('show');
+                }, 10);
+                
+                const menuItems = mobileMenu.querySelectorAll('.mobile-menu-item');
+                menuItems.forEach((item, index) => {
+                    item.style.opacity = '0';
+                    item.style.transform = 'translateX(-20px)';
+                    setTimeout(() => {
+                        item.style.transition = 'all 0.3s ease';
+                        item.style.opacity = '1';
+                        item.style.transform = 'translateX(0)';
+                    }, 100 + (index * 50));
+                });
+            }
+            
+            function closeMobileMenu() {
+                isMenuOpen = false;
+                mobileMenuBtn.classList.remove('active');
+                mobileMenu.classList.remove('show');
+                
+                setTimeout(() => {
+                    mobileMenu.classList.add('hidden');
+                }, 300);
+            }
+        }
     </script>
 
     <!-- WhatsApp Chat Button -->
     <a href="https://wa.me/917207534088?text=Hello%2C%20I%20would%20like%20to%20know%20more%20about%20your%20services."
-       class="fixed bottom-6 right-6 z-50 flex items-center bg-green-500 hover:bg-green-600 text-white px-4 py-3 rounded-full shadow-lg transition"
+       class="whatsapp-btn fixed bottom-6 right-6 z-50 flex items-center bg-green-500 hover:bg-green-600 text-white px-4 py-3 rounded-full shadow-lg transition-all duration-300"
        target="_blank" rel="noopener" aria-label="Chat on WhatsApp">
         <svg class="w-6 h-6 mr-2" fill="currentColor" viewBox="0 0 24 24">
             <path d="M20.52 3.48A11.93 11.93 0 0012 0C5.37 0 0 5.37 0 12c0 2.11.55 4.16 1.6 5.97L0 24l6.26-1.64A11.94 11.94 0 0012 24c6.63 0 12-5.37 12-12 0-3.19-1.24-6.19-3.48-8.52zM12 22c-1.85 0-3.67-.5-5.23-1.44l-.37-.22-3.71.97.99-3.62-.24-.38A9.94 9.94 0 012 12c0-5.52 4.48-10 10-10s10 4.48 10 10-4.48 10-10 10zm5.2-7.6c-.28-.14-1.65-.81-1.9-.9-.25-.09-.43-.14-.61.14-.18.28-.7.9-.86 1.08-.16.18-.32.2-.6.07-.28-.14-1.18-.44-2.25-1.4-.83-.74-1.39-1.65-1.55-1.93-.16-.28-.02-.43.12-.57.13-.13.28-.34.42-.51.14-.17.18-.29.28-.48.09-.19.05-.36-.02-.5-.07-.14-.61-1.47-.83-2.01-.22-.53-.45-.46-.61-.47-.16-.01-.35-.01-.54-.01-.19 0-.5.07-.76.34-.26.27-1 1-.97 2.43.03 1.43 1.03 2.81 1.18 3 .15.19 2.03 3.1 4.92 4.23.69.27 1.23.43 1.65.55.69.22 1.32.19 1.81.12.55-.08 1.65-.67 1.89-1.32.23-.65.23-1.21.16-1.32-.07-.11-.25-.18-.53-.32z"/>
