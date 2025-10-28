@@ -49,17 +49,15 @@
 
    <!-- Carousel Section -->
 <section class="container mx-auto px-4 py-8">
-  <div class="relative w-full max-w-[1080px] h-[500px] mx-auto">
-    <div id="carousel" class="relative overflow-hidden h-full rounded-lg bg-black">
-      <!-- Carousel items will be inserted here by JavaScript -->
-    </div>
-    <button id="prevBtn" class="absolute left-0 top-1/2 transform -translate-y-1/2 bg-white/50 p-2 rounded-r">
-      ←
-    </button>
-    <button id="nextBtn" class="absolute right-0 top-1/2 transform -translate-y-1/2 bg-white/50 p-2 rounded-l">
-      →
-    </button>
-  </div>
+  <div id="carousel" class="relative w-full h-[500px] overflow-hidden bg-black"></div>
+
+<div class="flex justify-center mt-4 space-x-4">
+  <button id="prevBtn" class="px-4 py-2 bg-gray-700 text-white rounded">Prev</button>
+  <button id="nextBtn" class="px-4 py-2 bg-gray-700 text-white rounded">Next</button>
+</div>
+
+<div id="productGrid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 mt-10"></div>
+
 </section>
 
 
