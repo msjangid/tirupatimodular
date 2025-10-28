@@ -1,4 +1,4 @@
-// Utility functions
+// Utility: Load image before showing
 const loadImage = (src) => {
     return new Promise((resolve, reject) => {
         const img = new Image();
@@ -8,7 +8,9 @@ const loadImage = (src) => {
     });
 };
 
-// Carousel Class
+// =====================
+// 🎠 Carousel Class
+// =====================
 class Carousel {
     constructor() {
         this.carousel = document.getElementById('carousel');
@@ -21,15 +23,13 @@ class Carousel {
         this.nextBtn = document.getElementById('nextBtn');
         this.currentIndex = 0;
         this.isTransitioning = false;
-        
-        // Add carousel button styles
+
         if (this.prevBtn && this.nextBtn) {
-            [this.prevBtn, this.nextBtn].forEach(btn => {
-                btn.classList.add('carousel-button');
-            });
+            [this.prevBtn, this.nextBtn].forEach(btn =>
+                btn.classList.add('carousel-button')
+            );
         }
 
-        // Test with one image first to verify loading
         this.images = [
             'Assets/images/carousel1.jpg',
             'Assets/images/carousel2.jpg',
@@ -58,20 +58,13 @@ class Carousel {
     }
 
     async loadImages() {
-        try {
-            await Promise.all(this.images.map(src => {
-                console.log('Loading image:', src);
-                return loadImage(src);
-            }));
-        } catch (error) {
-            console.error('Image loading failed:', error);
-            throw error;
-        }
+        await Promise.all(this.images.map(src => loadImage(src)));
     }
 
     showLoading() {
         const loader = document.createElement('div');
-        loader.className = 'loading-spinner absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2';
+        loader.className =
+            'loading-spinner absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2';
         this.carousel.appendChild(loader);
     }
 
@@ -89,33 +82,29 @@ class Carousel {
     }
 
     initCarousel() {
-        // Clear any existing content
         this.carousel.innerHTML = '';
-        
         this.images.forEach((src, index) => {
             const img = document.createElement('img');
             img.src = src;
             img.alt = `Carousel Image ${index + 1}`;
             img.classList.add(
-                'absolute', 
-                'w-full', 
-                'h-full', 
-                'object-cover', 
-                'transition-opacity', 
+                'absolute',
+                'w-full',
+                'h-full',
+                'object-cover',
+                'transition-opacity',
                 'duration-500'
             );
             img.style.opacity = index === 0 ? '1' : '0';
             this.carousel.appendChild(img);
         });
-
-        // Add progress indicators
         this.addProgressIndicators();
     }
 
     addProgressIndicators() {
         const indicators = document.createElement('div');
-        indicators.className = 'absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-2';
-        
+        indicators.className =
+            'absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-2';
         this.images.forEach((_, index) => {
             const dot = document.createElement('button');
             dot.className = `w-2 h-2 rounded-full transition-all duration-300 ${
@@ -124,7 +113,6 @@ class Carousel {
             dot.addEventListener('click', () => this.goToSlide(index));
             indicators.appendChild(dot);
         });
-
         this.carousel.appendChild(indicators);
     }
 
@@ -138,9 +126,9 @@ class Carousel {
     }
 
     bindEvents() {
-        this.prevBtn.addEventListener('click', () => this.navigate(-1));
-        this.nextBtn.addEventListener('click', () => this.navigate(1));
-        
+        if (this.prevBtn) this.prevBtn.addEventListener('click', () => this.navigate(-1));
+        if (this.nextBtn) this.nextBtn.addEventListener('click', () => this.navigate(1));
+
         // Pause autoplay on hover
         this.carousel.addEventListener('mouseenter', () => this.pauseAutoPlay());
         this.carousel.addEventListener('mouseleave', () => this.startAutoPlay());
@@ -151,20 +139,14 @@ class Carousel {
             if (e.key === 'ArrowRight') this.navigate(1);
         });
 
-        // Touch events for swipe
+        // Swipe support
         let touchStartX = 0;
         this.carousel.addEventListener('touchstart', (e) => {
             touchStartX = e.touches[0].clientX;
         });
-
         this.carousel.addEventListener('touchend', (e) => {
-            const touchEndX = e.changedTouches[0].clientX;
-            const diff = touchStartX - touchEndX;
-
-            if (Math.abs(diff) > 50) { // Minimum swipe distance
-                if (diff > 0) this.navigate(1); // Swipe left
-                else this.navigate(-1); // Swipe right
-            }
+            const diff = touchStartX - e.changedTouches[0].clientX;
+            if (Math.abs(diff) > 50) diff > 0 ? this.navigate(1) : this.navigate(-1);
         });
     }
 
@@ -174,22 +156,18 @@ class Carousel {
 
         const images = this.carousel.querySelectorAll('img');
         images[this.currentIndex].style.opacity = '0';
-        
         this.currentIndex = (this.currentIndex + direction + this.images.length) % this.images.length;
         images[this.currentIndex].style.opacity = '1';
-
-        // Update progress indicators
         this.updateProgressIndicators();
 
-        // Wait for transition to complete
-        await new Promise(resolve => setTimeout(resolve, 500));
+        await new Promise(res => setTimeout(res, 500));
         this.isTransitioning = false;
     }
 
     goToSlide(index) {
         if (this.isTransitioning || index === this.currentIndex) return;
-        const direction = index > this.currentIndex ? 1 : -1;
-        this.navigate(direction * Math.abs(index - this.currentIndex));
+        const diff = index - this.currentIndex;
+        this.navigate(diff);
     }
 
     startAutoPlay() {
@@ -201,67 +179,23 @@ class Carousel {
     }
 }
 
-// Product Grid Class
+// =====================
+// 🛋️ Product Grid Class
+// =====================
 class ProductGrid {
     constructor() {
         this.grid = document.getElementById('productGrid');
         this.products = [
             { name: 'Bed Room', image: 'Assets/images/bd1.jpg', price: 'Custom' },
-            { name: 'Bed Room', image: 'Assets/images/bd2.jpg',price: 'Custom'},
+            { name: 'Bed Room', image: 'Assets/images/bd2.jpg', price: 'Custom' },
             { name: 'Bed Room', image: 'Assets/images/bd3.jpg', price: 'Custom' },
-            { name: 'Bed Room', image: 'Assets/images/bd4.jpg', price: 'Custom'},
-            { name: 'Dining Table', image: 'Assets/images/d1.jpg',price: 'Custom'},
+            { name: 'Bed Room', image: 'Assets/images/bd4.jpg', price: 'Custom' },
+            { name: 'Dining Table', image: 'Assets/images/d1.jpg', price: 'Custom' },
             { name: 'Dining Table', image: 'Assets/images/d2.jpg', price: 'Custom' },
-            { name: 'Dressing Table', image: 'Assets/images/dr1.jpg', price: 'Custom'},
-            { name: 'Dressing Table', image: 'Assets/images/dr2.jpg', price: 'Custom' },
-            { name: 'Dressing Table', image: 'Assets/images/dr3.jpg', price: 'Custom' },
             { name: 'Kitchen', image: 'Assets/images/k1.jpg', price: 'Custom' },
             { name: 'Kitchen', image: 'Assets/images/k2.jpg', price: 'Custom' },
             { name: 'Kitchen', image: 'Assets/images/k3.jpg', price: 'Custom' },
-            { name: 'Kitchen', image: 'Assets/images/k4.jpg', price: 'Custom' },
-            { name: 'Kitchen', image: 'Assets/images/k5.jpg', price: 'Custom' },
-            { name: 'Kitchen', image: 'Assets/images/k6.jpg', price: 'Custom' },
-            { name: 'Kitchen', image: 'Assets/images/k8.jpg', price: 'Custom' },
-            { name: 'Kitchen ', image: 'Assets/images/k9.jpg', price: 'Custom' },
-            { name: 'Kitchen ', image: 'Assets/images/k10.jpg', price: 'Custom' },
-            { name: 'Living Room', image: 'Assets/images/L1.jpg', price: 'Custom' },
-            { name: 'Living Room', image: 'Assets/images/l3.jpg', price: 'Custom' },
-            { name: 'Living Room', image: 'Assets/images/l4.jpg', price: 'Custom' },
-            { name: 'Living Room', image: 'Assets/images/l5.jpg', price: 'Custom' },
-            { name: 'Living Room', image: 'Assets/images/l6.jpg', price: 'Custom' },
-            { name: 'Living Room', image: 'Assets/images/l7.jpg', price: 'Custom' },
-            { name: 'Living Room ', image: 'Assets/images/l8.jpg', price: 'Custom' },
-            { name: 'Living Room View', image: 'Assets/images/l9.jpg', price: 'Custom' },
-            { name: 'Living Room', image: 'Assets/images/l10.jpg', price: 'Custom' },
-            { name: 'Living Room View', image: 'Assets/images/rmv.jpg', price: 'Custom' },
-            { name: 'Lift Box Room', image: 'Assets/images/l2.jpg', price: 'Custom' },
-            { name: 'Bar Counter', image: 'Assets/images/msc1.jpg', price: 'Custom' },
-            { name: 'Office Reception', image: 'Assets/images/msc2.jpg', price: 'Custom' },
-            { name: 'Office Reception', image: 'Assets/images/msc3.jpg', price: 'Custom' },
-            { name: 'Shop', image: 'Assets/images/msc4.jpg', price: 'Custom' },
-            { name: 'Swiming View', image: 'Assets/images/msc5.jpg', price: 'Custom' },
-            { name: 'Ancient Table', image: 'Assets/images/msc6.jpg', price: 'Custom' },
-            { name: 'Pooja Room ', image: 'Assets/images/Pooja_Unit.jpg', price: 'Custom' },
-            { name: 'Wooden Stair ', image: 'Assets/images/stair.jpg', price: 'Custom' },
-            { name: 'Studt Table ', image: 'Assets/images/study.jpg', price: 'Custom' },
-            { name: 'Tv Unit ', image: 'Assets/images/Tv_unit.jpg', price: 'Custom' },
-            { name: 'Twin Room ', image: 'Assets/images/view.jpg', price: 'Custom' },
-            { name: 'Washbasin  ', image: 'Assets/images/wb1.jpg', price: 'Custom' },
-            { name: 'Washbasin ', image: 'Assets/images/wb2.jpg', price: 'Custom' },
-            { name: 'Washbasin ', image: 'Assets/images/wb3.jpg', price: 'Custom' },
-            { name: 'Washbasin ', image: 'Assets/images/wb4.jpg', price: 'Custom' },
-            { name: 'Washbasin ', image: 'Assets/images/wb5.jpg', price: 'Custom' },
-            { name: 'Wardrobe ', image: 'Assets/images/wr.jpg', price: 'Custom' },
-            { name: 'Wardrobe ', image: 'Assets/images/wr1.jpg', price: 'Custom' },
-            { name: 'Wardrobe ', image: 'Assets/images/wr3.jpg', price: 'Custom' },
-            { name: 'Wardrobe ', image: 'Assets/images/wr4.jpg', price: 'Custom' },
-            { name: 'Wardrobe ', image: 'Assets/images/wr5.jpg', price: 'Custom' },
-            { name: 'Wardrobe ', image: 'Assets/images/wr6.jpg', price: 'Custom' },
-            { name: 'Wardrobe ', image: 'Assets/images/wr7.jpg', price: 'Custom' },
-            { name: 'Wardrobe inside ', image: 'Assets/images/wrin1.jpg', price: 'Custom' },
-            { name: 'Wardrobe inside', image: 'Assets/images/wrin2.jpg', price: 'Custom' },
-            { name: 'Wardrobe inside', image: 'Assets/images/wrin3.jpg', price: 'Custom' },
-            { name: 'Wardrobe inside', image: 'Assets/images/wrin5.jpg', price: 'Custom' }
+            { name: 'Living Room', image: 'Assets/images/l1.jpg', price: 'Custom' }
         ];
         this.init();
     }
@@ -269,47 +203,30 @@ class ProductGrid {
     async init() {
         try {
             console.log('Loading products...');
-            await this.loadProducts();
+            this.loadProducts();
             this.addScrollAnimation();
         } catch (error) {
             console.error('Failed to load products:', error);
         }
     }
 
-    async loadProducts() {
+    loadProducts() {
         this.products.forEach((product, index) => {
             const container = document.createElement('div');
-            container.className = 'product-container bg-white rounded-lg shadow-md overflow-hidden opacity-0';
+            container.className =
+                'product-container bg-white rounded-lg shadow-md overflow-hidden opacity-0 transition-opacity duration-700';
             container.style.transitionDelay = `${index * 100}ms`;
-            
+
             container.innerHTML = `
                 <div class="relative overflow-hidden group">
-                    <img src="${product.image}" alt="${product.name}" 
-                         class="w-full h-64 object-cover transition-transform duration-300 
-                         group-hover:scale-110">
-                    <div class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-20 
-                               transition-all duration-300"></div>
+                    <img src="${product.image}" alt="${product.name}"
+                         class="w-full h-64 object-cover transition-transform duration-300 group-hover:scale-110">
                 </div>
                 <div class="p-4">
                     <h3 class="text-lg font-semibold text-gray-800">${product.name}</h3>
                     <p class="text-gray-600 mt-1">${product.price}</p>
-                    <button class="view-details-btn mt-2 px-4 py-2 bg-gray-800 text-white rounded hover:bg-gray-700 
-                                 transition-colors duration-300">
-                        View Details
-                    </button>
                 </div>
             `;
-            
-            // Add click event for the View Details button
-            const viewDetailsBtn = container.querySelector('.view-details-btn');
-            viewDetailsBtn.addEventListener('click', (e) => {
-                e.preventDefault();
-                // Extract image filename for description
-                const filename = product.image.split(/[\/\\]/).pop();
-                const description = imageDescriptions[filename] || 'Custom modular furniture design';
-                showZoomModal(product.image, description);
-            });
-            
             this.grid.appendChild(container);
         });
     }
@@ -330,7 +247,9 @@ class ProductGrid {
     }
 }
 
-// Mobile menu toggle
+// =====================
+// 📱 Mobile Menu Toggle
+// =====================
 const mobileMenuBtn = document.getElementById('mobileMenuBtn');
 const mobileMenu = document.getElementById('mobileMenu');
 
@@ -340,163 +259,11 @@ if (mobileMenuBtn && mobileMenu) {
     });
 }
 
-// Initialize when DOM is loaded
+// =====================
+// 🚀 Initialize All Components
+// =====================
 document.addEventListener('DOMContentLoaded', () => {
-    try {
-        console.log('DOM loaded, initializing components...');
-        new Carousel();
-        new ProductGrid();
-    } catch (error) {
-        console.error('Initialization failed:', error);
-    }
-});
-
-// Add these functions at the end of your script.js file
-
-// Image descriptions object
-const imageDescriptions = {
-    'bd1.jpg': 'This is 8x6 jambo size with soft cosuin and brown laminited',
-    'bd2.JPG': 'Contemporary bedroom setup with minimalist design and ample storage',
-    'bd3.jpg': 'Luxurious master bedroom with custom wardrobe solutions',
-    'bd4.jpg': 'Stylish bedroom interior with integrated lighting and storage',
-    // Add descriptions for other images as needed
-};
-
-function openModal(imageSrc) {
-    const modal = document.getElementById('imageModal');
-    const modalImg = document.getElementById('modalImage');
-    const modalDesc = document.getElementById('modalDescription');
-    
-    // Extract image filename from path
-    const filename = imageSrc.split('/').pop();
-    
-    modalImg.src = imageSrc;
-    modalDesc.textContent = imageDescriptions[filename] || 'Custom modular furniture design';
-    modal.classList.remove('hidden');
-}
-
-function closeModal() {
-    const modal = document.getElementById('imageModal');
-    modal.classList.add('hidden');
-}
-
-// Modify the createProductItem function to open in new window with description
-function createProductItem(imageSrc, title) {
-    const div = document.createElement('div');
-    div.className = 'bg-white rounded-lg shadow-md overflow-hidden';
-    
-    // Extract image filename from path
-    const filename = imageSrc.split(/[\/\\]/).pop();
-    const description = imageDescriptions[filename] || 'Custom modular furniture design';
-    
-    div.innerHTML = `
-        <img src="${imageSrc}" alt="${title}" class="w-full h-64 object-cover">
-        <div class="p-4">
-            <h3 class="text-lg font-semibold">${title}</h3>
-            <p class="text-gray-600 mt-2">Custom</p>
-            <button onclick="openImageInNewWindow('${imageSrc}', '${description}')" 
-                    class="mt-4 bg-gray-800 text-white px-4 py-2 rounded hover:bg-gray-700 transition duration-300">
-                View Details
-            </button>
-        </div>
-    `;
-    
-    return div;
-}
-
-// Add this new function to open image in new window with description
-// Modify the openImageInNewWindow function
-function openImageInNewWindow(imageSrc, description) {
-    const encodedDesc = encodeURIComponent(description);
-    const url = `imageDetails.html?image=${imageSrc}&description=${encodedDesc}`;
-    window.open(url, '_blank');
-}
-
-// Amazon-style zoom lens modal logic
-function showZoomModal(imageSrc, description) {
-    const modal = document.getElementById('zoomModal');
-    const zoomImg = document.getElementById('zoomImage');
-    const zoomDesc = document.getElementById('zoomDescription');
-    const lens = document.getElementById('lens');
-    const zoomResult = document.getElementById('zoomResult');
-
-    zoomImg.src = imageSrc;
-    zoomDesc.textContent = description;
-    zoomResult.style.backgroundImage = `url('${imageSrc}')`;
-    modal.classList.remove('hidden');
-
-    lens.style.display = 'block';
-
-    let cx, cy;
-
-    zoomImg.onload = function() {
-        // Calculate the ratio between result div and lens
-        cx = zoomResult.offsetWidth / lens.offsetWidth;
-        cy = zoomResult.offsetHeight / lens.offsetHeight;
-        zoomResult.style.backgroundSize = 
-            (zoomImg.width * cx) + "px " + (zoomImg.height * cy) + "px";
-    };
-
-    function moveLens(e) {
-        e.preventDefault();
-        const pos = getCursorPos(e);
-        let x = pos.x - lens.offsetWidth / 2;
-        let y = pos.y - lens.offsetHeight / 2;
-
-        // Prevent lens from going outside the image
-        if (x > zoomImg.width - lens.offsetWidth) x = zoomImg.width - lens.offsetWidth;
-        if (x < 0) x = 0;
-        if (y > zoomImg.height - lens.offsetHeight) y = zoomImg.height - lens.offsetHeight;
-        if (y < 0) y = 0;
-
-        lens.style.left = x + "px";
-        lens.style.top = y + "px";
-
-        zoomResult.style.backgroundPosition = 
-            "-" + (x * cx) + "px -" + (y * cy) + "px";
-    }
-
-    function getCursorPos(e) {
-        const a = zoomImg.getBoundingClientRect();
-        let x = (e.touches ? e.touches[0].clientX : e.clientX) - a.left;
-        let y = (e.touches ? e.touches[0].clientY : e.clientY) - a.top;
-        x = x / (a.right - a.left) * zoomImg.width;
-        y = y / (a.bottom - a.top) * zoomImg.height;
-        return { x: x, y: y };
-    }
-
-    // Mouse and touch events
-    lens.onmousemove = moveLens;
-    zoomImg.onmousemove = moveLens;
-    lens.ontouchmove = moveLens;
-    zoomImg.ontouchmove = moveLens;
-    zoomImg.onmouseleave = () => { lens.style.display = 'none'; zoomResult.style.backgroundPosition = 'center'; };
-    zoomImg.onmouseenter = () => { lens.style.display = 'block'; };
-
-    // Reset lens and zoomResult when modal closes
-    document.getElementById('closeZoomModal').onclick = function() {
-        modal.classList.add('hidden');
-        lens.style.display = 'none';
-        zoomResult.style.backgroundImage = '';
-    };
-}
-
-// Close modal logic
-document.getElementById('closeZoomModal').onclick = function() {
-    document.getElementById('zoomModal').classList.add('hidden');
-    document.getElementById('lens').style.display = 'none';
-};
-
-// Update all "View Details" buttons to use the zoom modal
-document.addEventListener('DOMContentLoaded', () => {
-    document.querySelectorAll('.view-details-btn').forEach((btn, idx) => {
-        btn.onclick = function(e) {
-            e.preventDefault();
-            const product = (new ProductGrid()).products[idx];
-            // Extract image filename for description
-            const filename = product.image.split(/[\/\\]/).pop();
-            const description = imageDescriptions[filename] || 'Custom modular furniture design';
-            showZoomModal(product.image, description);
-        };
-    });
+    console.log('DOM loaded, initializing components...');
+    new Carousel();
+    new ProductGrid();
 });
