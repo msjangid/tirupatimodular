@@ -198,7 +198,9 @@ class ProductGrid {
             { name: 'Kitchen', image: 'Assets/images/Page19.jpg', price: 'Custom' },
             { name: 'Kitchen', image: 'Assets/images/k2.jpg', price: 'Custom' },
             { name: 'Kitchen', image: 'Assets/images/Page51.jpg', price: 'Custom' },
-            { name: 'Living Room', image: 'Assets/images/l1.JPG', price: 'Custom' }
+            { name: 'Living Room', image: 'Assets/images/l1.JPG', price: 'Custom' },
+            { name: 'Living Room', image: 'Assets/images/Page2.jpg', price: 'Custom' },
+            { name: 'Living Room', image: 'Assets/images/Page3.jpg', price: 'Custom' }
         ];
         this.init();
     }
