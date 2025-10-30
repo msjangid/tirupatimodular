@@ -190,9 +190,9 @@ class ProductGrid {
         this.grid = document.getElementById('productGrid');
         this.products = [
             { name: 'Bed Room', image: 'Assets/images/bd1.jpg', price: 'Custom' },
-            { name: 'Bed Room', image: 'Assets/images/bd2.JPG', price: 'Custom' },
+            { name: 'Bed Room', image: 'Assets/images/Page36.JPG', price: 'Custom' },
             { name: 'Bed Room', image: 'Assets/images/bd3.jpg', price: 'Custom' },
-            { name: 'Bed Room', image: 'Assets/images/bd4.jpg', price: 'Custom' },
+            { name: 'Bed Room', image: 'Assets/images/Page43.jpg', price: 'Custom' },
             { name: 'Dining Table', image: 'Assets/images/D1.JPG', price: 'Custom' },
             { name: 'Dining Table', image: 'Assets/images/D2.jpg', price: 'Custom' },
             { name: 'Kitchen', image: 'Assets/images/Page19.jpg', price: 'Custom' },
