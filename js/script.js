@@ -195,9 +195,9 @@ class ProductGrid {
             { name: 'Bed Room', image: 'Assets/images/bd4.jpg', price: 'Custom' },
             { name: 'Dining Table', image: 'Assets/images/D1.JPG', price: 'Custom' },
             { name: 'Dining Table', image: 'Assets/images/D2.jpg', price: 'Custom' },
-            { name: 'Kitchen', image: 'Assets/images/k1.jpg', price: 'Custom' },
+            { name: 'Kitchen', image: 'Assets/images/page19.jpg', price: 'Custom' },
             { name: 'Kitchen', image: 'Assets/images/k2.jpg', price: 'Custom' },
-            { name: 'Kitchen', image: 'Assets/images/k3.jpg', price: 'Custom' },
+            { name: 'Kitchen', image: 'Assets/images/page51.jpg', price: 'Custom' },
             { name: 'Living Room', image: 'Assets/images/l1.JPG', price: 'Custom' }
         ];
         this.init();
