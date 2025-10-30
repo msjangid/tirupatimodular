@@ -200,7 +200,15 @@ class ProductGrid {
             { name: 'Kitchen', image: 'Assets/images/Page51.jpg', price: 'Custom' },
             { name: 'Living Room', image: 'Assets/images/l1.JPG', price: 'Custom' },
             { name: 'Living Room', image: 'Assets/images/Page2.jpg', price: 'Custom' },
-            { name: 'Living Room', image: 'Assets/images/Page3.jpg', price: 'Custom' }
+            { name: 'Living Room', image: 'Assets/images/Page3.jpg', price: 'Custom' },
+            { name: 'Room Ceilling', image: 'Assets/images/Page5.jpg', price: 'Custom' },
+            { name: 'Room Ceilling', image: 'Assets/images/Page14.jpg', price: 'Custom' },
+            { name: 'Room Ceilling', image: 'Assets/images/Page53.jpg', price: 'Custom' },
+            { name: 'Room Ceilling', image: 'Assets/images/Page54.jpg', price: 'Custom' },
+            { name: 'Accessory', image: 'Assets/images/Page15.jpg', price: 'Custom' },
+            { name: 'Accessory', image: 'Assets/images/Page16.jpg', price: 'Custom' },
+            { name: 'Accessory', image: 'Assets/images/Page41.jpg', price: 'Custom' },
+            { name: 'Accessory', image: 'Assets/images/Page46.jpg', price: 'Custom' }
         ];
         this.init();
     }
