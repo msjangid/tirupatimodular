@@ -7,13 +7,13 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="css/styles.css" rel="stylesheet">
     <style>
-        .main/album-carousel {
+        .album-carousel {
             scroll-behavior: smooth;
         }
-        .main/album-image {
+        .album-image {
             transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
-        .main/album-image:hover {
+        .album-image:hover {
             transform: scale(1.05);
             box-shadow: 0 20px 40px rgba(0,0,0,0.2);
         }
@@ -135,7 +135,7 @@
         </div>
     </section>
 
-    <!-- main/album Gallery -->
+    <!-- Album Gallery -->
     <section class="container mx-auto px-4 py-8">
         <!-- Gallery Info -->
         <div class="flex flex-col sm:flex-row justify-between items-center mb-6 bg-white rounded-lg p-4 shadow-md">
@@ -164,17 +164,17 @@
         <!-- Main Carousel -->
         <div class="relative bg-white rounded-xl shadow-2xl overflow-hidden mb-6">
             <div class="relative h-[400px] sm:h-[500px] lg:h-[600px]">
-                <div id="main/albumCarousel" class="main/album-carousel w-full h-full flex transition-transform duration-500 ease-in-out">
+                <div id="albumCarousel" class="album-carousel w-full h-full flex transition-transform duration-500 ease-in-out">
                     <!-- Images will be loaded here by JavaScript -->
                 </div>
                 
                 <!-- Navigation Buttons -->
-                <button id="prevmain/albumBtn" class="absolute left-4 top-1/2 transform -translate-y-1/2 bg-white/90 backdrop-blur-sm hover:bg-white hover:scale-110 p-3 rounded-full shadow-xl border border-gray-200/50 transition-all duration-300 group">
+                <button id="prevAlbumBtn" class="absolute left-4 top-1/2 transform -translate-y-1/2 bg-white/90 backdrop-blur-sm hover:bg-white hover:scale-110 p-3 rounded-full shadow-xl border border-gray-200/50 transition-all duration-300 group">
                     <svg class="w-6 h-6 text-gray-700 group-hover:text-gray-900 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7"/>
                     </svg>
                 </button>
-                <button id="nextmain/albumBtn" class="absolute right-4 top-1/2 transform -translate-y-1/2 bg-white/90 backdrop-blur-sm hover:bg-white hover:scale-110 p-3 rounded-full shadow-xl border border-gray-200/50 transition-all duration-300 group">
+                <button id="nextAlbumBtn" class="absolute right-4 top-1/2 transform -translate-y-1/2 bg-white/90 backdrop-blur-sm hover:bg-white hover:scale-110 p-3 rounded-full shadow-xl border border-gray-200/50 transition-all duration-300 group">
                     <svg class="w-6 h-6 text-gray-700 group-hover:text-gray-900 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"/>
                     </svg>
@@ -284,8 +284,8 @@
 
     <script src="js/script.js"></script>
     <script>
-        // main/album-specific JavaScript
-        class main/albumGallery {
+        // Album-specific JavaScript
+        class AlbumGallery {
             constructor() {
                 this.currentIndex = 0;
                 this.images = [];
@@ -310,7 +310,7 @@
             }
 
             loadImages() {
-                const carousel = document.getElementById('main/albumCarousel');
+                const carousel = document.getElementById('albumCarousel');
                 carousel.innerHTML = '';
                 
                 this.images.forEach((src, index) => {
@@ -318,8 +318,8 @@
                     imageDiv.className = 'w-full h-full flex-shrink-0 flex items-center justify-center bg-gray-100';
                     imageDiv.innerHTML = `
                         <img src="${src}" alt="Page ${index + 1}" 
-                             class="main/album-image max-w-full max-h-full object-contain cursor-pointer"
-                             onclick="main/albumGallery.openFullscreen(${index})"
+                             class="album-image max-w-full max-h-full object-contain cursor-pointer"
+                             onclick="albumGallery.openFullscreen(${index})"
                              onerror="this.parentElement.innerHTML='<div class=\\'flex flex-col items-center justify-center h-full text-gray-500\\'><svg class=\\'w-16 h-16 mb-2\\' fill=\\'currentColor\\' viewBox=\\'0 0 20 20\\'><path fill-rule=\\'evenodd\\' d=\\'M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm12 12H4l4-8 3 6 2-4 3 6z\\' clip-rule=\\'evenodd\\'></path></svg><p>Image not found</p></div>'">
                     `;
                     carousel.appendChild(imageDiv);
@@ -338,7 +338,7 @@
                     thumbnail.innerHTML = `
                         <img src="${src}" alt="Thumbnail ${index + 1}" 
                              class="w-full h-full object-cover"
-                             onclick="main/albumGallery.goToImage(${index})"
+                             onclick="albumGallery.goToImage(${index})"
                              onerror="this.parentElement.innerHTML='<div class=\\'w-full h-full bg-gray-200 flex items-center justify-center\\'>?</div>'">
                     `;
                     thumbnailNav.appendChild(thumbnail);
@@ -346,7 +346,7 @@
             }
 
             updateCarouselPosition() {
-                const carousel = document.getElementById('main/albumCarousel');
+                const carousel = document.getElementById('albumCarousel');
                 carousel.style.transform = `translateX(-${this.currentIndex * 100}%)`;
             }
 
@@ -449,8 +449,8 @@
 
             bindEvents() {
                 // Navigation buttons
-                document.getElementById('nextmain/albumBtn').addEventListener('click', () => this.nextImage());
-                document.getElementById('prevmain/albumBtn').addEventListener('click', () => this.prevImage());
+                document.getElementById('nextAlbumBtn').addEventListener('click', () => this.nextImage());
+                document.getElementById('prevAlbumBtn').addEventListener('click', () => this.prevImage());
                 
                 // Slideshow toggle
                 document.getElementById('playPauseBtn').addEventListener('click', () => this.toggleSlideshow());
@@ -500,10 +500,10 @@
             }
         }
 
-        // Initialize the main/album gallery when page loads
-        let main/albumGallery;
+        // Initialize the album gallery when page loads
+        let albumGallery;
         document.addEventListener('DOMContentLoaded', function() {
-            main/albumGallery = new main/albumGallery();
+            albumGallery = new AlbumGallery();
         });
     </script>
 </body>
