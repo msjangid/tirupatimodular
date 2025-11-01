@@ -189,7 +189,7 @@ class ProductGrid {
     constructor() {
         this.grid = document.getElementById('productGrid');
         this.products = [
-            { name: 'Bed Room', image: 'Assets/images/bd1.jpg', price: 'Custom' },
+            { name: 'Bed Room', image: 'Assets/images/Page33.jpg', price: 'Custom' },
             { name: 'Bed Room', image: 'Assets/images/Page36.jpg', price: 'Custom' },
             { name: 'Bed Room', image: 'Assets/images/bd3.jpg', price: 'Custom' },
             { name: 'Bed Room', image: 'Assets/images/Page43.jpg', price: 'Custom' },
@@ -198,7 +198,7 @@ class ProductGrid {
             { name: 'Kitchen', image: 'Assets/images/Page19.jpg', price: 'Custom' },
             { name: 'Kitchen', image: 'Assets/images/k2.jpg', price: 'Custom' },
             { name: 'Kitchen', image: 'Assets/images/Page51.jpg', price: 'Custom' },
-            { name: 'Living Room', image: 'Assets/images/l1.JPG', price: 'Custom' },
+            { name: 'Living Room', image: 'Assets/images/Page20.JPG', price: 'Custom' },
             { name: 'Living Room', image: 'Assets/images/Page2.jpg', price: 'Custom' },
             { name: 'Living Room', image: 'Assets/images/Page3.jpg', price: 'Custom' },
             { name: 'Room Ceilling', image: 'Assets/images/Page5.jpg', price: 'Custom' },
