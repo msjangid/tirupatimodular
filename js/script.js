@@ -1,3 +1,189 @@
+// =====================
+// 🛡️ IMAGE PROTECTION SYSTEM
+// =====================
+
+// Disable right-click, drag, save, and screenshot attempts
+function initImageProtection() {
+    // Disable right-click context menu
+    document.addEventListener('contextmenu', function(e) {
+        e.preventDefault();
+        showProtectionMessage('Right-click is disabled to protect content');
+        return false;
+    });
+
+    // Disable drag and drop
+    document.addEventListener('dragstart', function(e) {
+        if (e.target.tagName === 'IMG') {
+            e.preventDefault();
+            return false;
+        }
+    });
+
+    // Disable text selection on images
+    document.addEventListener('selectstart', function(e) {
+        if (e.target.tagName === 'IMG') {
+            e.preventDefault();
+            return false;
+        }
+    });
+
+    // Disable keyboard shortcuts for saving/copying
+    document.addEventListener('keydown', function(e) {
+        // Disable Ctrl+S (Save), Ctrl+A (Select All), Ctrl+C (Copy), F12 (DevTools), Ctrl+Shift+I (DevTools)
+        if (e.ctrlKey && (e.key === 's' || e.key === 'a' || e.key === 'c' || e.key === 'u')) {
+            e.preventDefault();
+            showProtectionMessage('This action is disabled to protect content');
+            return false;
+        }
+        
+        // Disable F12, Ctrl+Shift+I, Ctrl+Shift+J (Developer tools)
+        if (e.key === 'F12' || (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'J'))) {
+            e.preventDefault();
+            showProtectionMessage('Developer tools are disabled');
+            return false;
+        }
+
+        // Disable Print Screen
+        if (e.key === 'PrintScreen') {
+            e.preventDefault();
+            showProtectionMessage('Screenshots are disabled to protect content');
+            return false;
+        }
+    });
+
+    // Detect if developer tools might be open
+    let devtools = {
+        open: false,
+        orientation: null
+    };
+    
+    const threshold = 160;
+    setInterval(() => {
+        if (window.outerHeight - window.innerHeight > threshold || 
+            window.outerWidth - window.innerWidth > threshold) {
+            if (!devtools.open) {
+                devtools.open = true;
+                document.body.style.display = 'none';
+                alert('Developer tools detected! Content is protected.');
+                window.location.reload();
+            }
+        } else {
+            devtools.open = false;
+        }
+    }, 500);
+
+    // Apply protection to all images
+    applyImageProtection();
+}
+
+// Show protection message
+function showProtectionMessage(message) {
+    // Create or update protection message
+    let msgDiv = document.getElementById('protection-message');
+    if (!msgDiv) {
+        msgDiv = document.createElement('div');
+        msgDiv.id = 'protection-message';
+        msgDiv.style.cssText = `
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(0,0,0,0.9);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            z-index: 10000;
+            text-align: center;
+            font-size: 16px;
+            font-weight: bold;
+        `;
+        document.body.appendChild(msgDiv);
+    }
+    
+    msgDiv.textContent = message;
+    msgDiv.style.display = 'block';
+    
+    setTimeout(() => {
+        msgDiv.style.display = 'none';
+    }, 2000);
+}
+
+// Apply protection and watermark to all images
+function applyImageProtection() {
+    const images = document.querySelectorAll('img');
+    images.forEach(img => {
+        // Skip protection for logo images
+        if (img.src && (img.src.includes('logo.png') || img.alt && img.alt.toLowerCase().includes('logo'))) {
+            return;
+        }
+        
+        // Disable right-click
+        img.oncontextmenu = () => false;
+        
+        // Disable drag
+        img.draggable = false;
+        img.ondragstart = () => false;
+        
+        // Add protection attributes
+        img.setAttribute('oncontextmenu', 'return false');
+        img.setAttribute('onselectstart', 'return false');
+        img.setAttribute('ondragstart', 'return false');
+        
+        // Add watermark wrapper
+        if (!img.parentElement.classList.contains('watermark-container')) {
+            wrapImageWithWatermark(img);
+        }
+    });
+}
+
+// Wrap image with watermark
+function wrapImageWithWatermark(img) {
+    const wrapper = document.createElement('div');
+    wrapper.className = 'watermark-container';
+    wrapper.style.cssText = `
+        position: relative;
+        display: inline-block;
+        width: 100%;
+        height: 100%;
+    `;
+    
+    // Insert wrapper before image
+    img.parentNode.insertBefore(wrapper, img);
+    wrapper.appendChild(img);
+    
+    // Create watermark
+    const watermark = document.createElement('div');
+    watermark.className = 'watermark';
+    watermark.textContent = 'Tirupati';
+    watermark.style.cssText = `
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%) rotate(-45deg);
+        font-size: clamp(20px, 5vw, 60px);
+        font-weight: bold;
+        color: rgba(255, 255, 255, 0.3);
+        text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+        pointer-events: none;
+        user-select: none;
+        z-index: 10;
+        font-family: Arial, sans-serif;
+        letter-spacing: 2px;
+        white-space: nowrap;
+    `;
+    
+    wrapper.appendChild(watermark);
+    
+    // Add multiple watermarks for better coverage
+    for (let i = 0; i < 3; i++) {
+        const extraWatermark = watermark.cloneNode(true);
+        extraWatermark.style.top = `${30 + (i * 20)}%`;
+        extraWatermark.style.left = `${30 + (i * 20)}%`;
+        extraWatermark.style.opacity = '0.2';
+        wrapper.appendChild(extraWatermark);
+    }
+}
+
 // Utility: Load image before showing
 const loadImage = (src) => {
     return new Promise((resolve, reject) => {
@@ -440,6 +626,10 @@ if (mobileMenuBtn && mobileMenu) {
 // =====================
 document.addEventListener('DOMContentLoaded', () => {
     console.log('DOM loaded, initializing components...');
+    
+    // Initialize image protection first
+    initImageProtection();
+    
     new Carousel();
     new ProductGrid();
     
