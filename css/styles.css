@@ -32,15 +32,23 @@ img[alt*="Logo"] {
     -webkit-touch-callout: default !important;
 }
 
-/* Re-enable pointer events for clickable images (like carousel navigation) and logos */
+/* Re-enable pointer events for clickable images (like carousel navigation), logos, and zoom modal images */
 .carousel-button img, 
 button img,
 a img,
 .clickable img,
+.zoom-active,
+#zoomImage,
+#zoomModal img,
+.modal-content img,
 img[src*="logo.png"],
 img[alt*="logo"],
 img[alt*="Logo"] {
     pointer-events: auto !important;
+    -webkit-user-select: auto !important;
+    -moz-user-select: auto !important;
+    -ms-user-select: auto !important;
+    user-select: auto !important;
 }
 
 /* Watermark container styles */
@@ -86,9 +94,30 @@ img::-webkit-drag-placeholder {
     display: none !important;
 }
 
+/* Zoom modal specific styles */
+#zoomModal {
+    z-index: 1000 !important;
+}
+
+#zoomImage {
+    cursor: crosshair !important;
+    pointer-events: auto !important;
+}
+
+#lens {
+    pointer-events: none !important;
+    border: 2px solid rgba(255, 255, 255, 0.8) !important;
+    background: rgba(255, 255, 255, 0.3) !important;
+}
+
+.zoom-active {
+    pointer-events: auto !important;
+    cursor: crosshair !important;
+}
+
 /* Disable print for images */
 @media print {
-    img {
+    img:not(.zoom-active):not([src*="logo.png"]) {
         display: none !important;
     }
     .watermark-container::after {
