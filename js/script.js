@@ -654,6 +654,11 @@ document.addEventListener('DOMContentLoaded', () => {
     new Carousel();
     new ProductGrid();
     
+    // Initialize chatbot
+    if (typeof TirupatiChatbot !== 'undefined') {
+        window.tirupatiChatbot = new TirupatiChatbot();
+    }
+    
     // Setup modal close buttons
     const closeZoomBtn = document.getElementById('closeZoomModal');
     if (closeZoomBtn) {
