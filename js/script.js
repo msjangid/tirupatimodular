@@ -451,12 +451,25 @@ class ProductGrid {
             const img = new Image();
             img.onload = () => {
                 zoomImage.src = imageSrc;
+                zoomImage.style.pointerEvents = 'auto';
+                zoomImage.classList.add('zoom-active');
+                
+                // Remove protection from zoom image
+                zoomImage.oncontextmenu = null;
+                zoomImage.draggable = true;
+                zoomImage.removeAttribute('oncontextmenu');
+                zoomImage.removeAttribute('onselectstart');
+                zoomImage.removeAttribute('ondragstart');
+                
                 zoomDescription.textContent = description || 'Product Image';
                 zoomResult.style.backgroundImage = `url(${imageSrc})`;
                 zoomModal.classList.remove('hidden');
                 
-                // Setup magnifier effect
-                this.setupMagnifier(zoomImage, zoomResult);
+                // Setup magnifier effect with a small delay to ensure everything is ready
+                setTimeout(() => {
+                    this.setupMagnifier(zoomImage, zoomResult);
+                }, 100);
+                
                 console.log('Zoom modal opened successfully');
             };
             img.onerror = () => {
@@ -487,6 +500,10 @@ class ProductGrid {
         const lens = document.getElementById('lens');
         if (!lens) return;
 
+        // Ensure the zoom image has pointer events enabled
+        img.style.pointerEvents = 'auto';
+        img.classList.add('zoom-active');
+
         const magnifyLevel = 2;
         
         img.addEventListener('mousemove', (e) => {
@@ -509,6 +526,10 @@ class ProductGrid {
         
         img.addEventListener('mouseleave', () => {
             lens.style.display = 'none';
+        });
+        
+        img.addEventListener('mouseenter', () => {
+            lens.style.display = 'block';
         });
     }
 }
