@@ -56,7 +56,7 @@ Then open: http://localhost:3000
 │   └── styles.css      # Custom styles and animations
 ├── js/
 │   └── script.js       # Carousel and modal functionality
-├── Assets/images/      # All product and carousel images
+├── assets/images/      # All product and carousel images
 ├── server.js          # Node.js server (optional)
 └── package.json       # Dependencies
 ```
