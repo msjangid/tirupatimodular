@@ -316,12 +316,66 @@
                 this.images.forEach((src, index) => {
                     const imageDiv = document.createElement('div');
                     imageDiv.className = 'w-full h-full flex-shrink-0 flex items-center justify-center bg-gray-100';
-                    imageDiv.innerHTML = `
-                        <img src="${src}" alt="Page ${index + 1}" 
-                             class="album-image max-w-full max-h-full object-contain cursor-pointer"
-                             onclick="albumGallery.openFullscreen(${index})"
-                             onerror="this.parentElement.innerHTML='<div class=\\'flex flex-col items-center justify-center h-full text-gray-500\\'><svg class=\\'w-16 h-16 mb-2\\' fill=\\'currentColor\\' viewBox=\\'0 0 20 20\\'><path fill-rule=\\'evenodd\\' d=\\'M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm12 12H4l4-8 3 6 2-4 3 6z\\' clip-rule=\\'evenodd\\'></path></svg><p>Image not found</p></div>'">
+                    
+                    // Create watermark container
+                    const watermarkContainer = document.createElement('div');
+                    watermarkContainer.className = 'watermark-container w-full h-full flex items-center justify-center';
+                    watermarkContainer.style.cssText = 'position: relative; overflow: hidden;';
+                    
+                    // Create image
+                    const img = document.createElement('img');
+                    img.src = src;
+                    img.alt = `Page ${index + 1}`;
+                    img.className = 'album-image max-w-full max-h-full object-contain cursor-pointer clickable';
+                    img.onclick = () => this.openFullscreen(index);
+                    img.draggable = false;
+                    img.oncontextmenu = () => false;
+                    img.setAttribute('oncontextmenu', 'return false');
+                    img.setAttribute('onselectstart', 'return false');
+                    img.setAttribute('ondragstart', 'return false');
+                    img.onerror = function() {
+                        this.parentElement.innerHTML = '<div class="flex flex-col items-center justify-center h-full text-gray-500"><svg class="w-16 h-16 mb-2" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm12 12H4l4-8 3 6 2-4 3 6z" clip-rule="evenodd"></path></svg><p>Image not found</p></div>';
+                    };
+                    
+                    // Create watermarks
+                    const watermark1 = document.createElement('div');
+                    watermark1.className = 'watermark';
+                    watermark1.textContent = 'Tirupati';
+                    watermark1.style.cssText = `
+                        position: absolute;
+                        top: 50%;
+                        left: 50%;
+                        transform: translate(-50%, -50%) rotate(-45deg);
+                        font-size: clamp(15px, 4vw, 40px);
+                        font-weight: bold;
+                        color: rgba(255, 255, 255, 0.4);
+                        text-shadow: 2px 2px 4px rgba(0,0,0,0.6);
+                        pointer-events: none;
+                        user-select: none;
+                        z-index: 10;
+                        font-family: Arial, sans-serif;
+                        letter-spacing: 2px;
+                        white-space: nowrap;
                     `;
+                    
+                    // Create additional watermarks for coverage
+                    const watermark2 = watermark1.cloneNode(true);
+                    watermark2.style.top = '25%';
+                    watermark2.style.left = '25%';
+                    watermark2.style.opacity = '0.3';
+                    
+                    const watermark3 = watermark1.cloneNode(true);
+                    watermark3.style.top = '75%';
+                    watermark3.style.left = '75%';
+                    watermark3.style.opacity = '0.3';
+                    
+                    // Assemble the protected image
+                    watermarkContainer.appendChild(img);
+                    watermarkContainer.appendChild(watermark1);
+                    watermarkContainer.appendChild(watermark2);
+                    watermarkContainer.appendChild(watermark3);
+                    
+                    imageDiv.appendChild(watermarkContainer);
                     carousel.appendChild(imageDiv);
                 });
                 
@@ -335,12 +389,48 @@
                 this.images.forEach((src, index) => {
                     const thumbnail = document.createElement('div');
                     thumbnail.className = `flex-shrink-0 w-16 h-16 sm:w-20 sm:h-20 cursor-pointer rounded-lg overflow-hidden border-2 transition-all duration-300 ${index === this.currentIndex ? 'border-purple-600 shadow-lg' : 'border-gray-300 hover:border-purple-400'}`;
-                    thumbnail.innerHTML = `
-                        <img src="${src}" alt="Thumbnail ${index + 1}" 
-                             class="w-full h-full object-cover"
-                             onclick="albumGallery.goToImage(${index})"
-                             onerror="this.parentElement.innerHTML='<div class=\\'w-full h-full bg-gray-200 flex items-center justify-center\\'>?</div>'">
+                    
+                    // Create protected thumbnail with watermark
+                    const thumbContainer = document.createElement('div');
+                    thumbContainer.className = 'watermark-container w-full h-full relative';
+                    thumbContainer.style.cssText = 'position: relative; overflow: hidden;';
+                    
+                    const thumbImg = document.createElement('img');
+                    thumbImg.src = src;
+                    thumbImg.alt = `Thumbnail ${index + 1}`;
+                    thumbImg.className = 'w-full h-full object-cover clickable';
+                    thumbImg.onclick = () => this.goToImage(index);
+                    thumbImg.draggable = false;
+                    thumbImg.oncontextmenu = () => false;
+                    thumbImg.setAttribute('oncontextmenu', 'return false');
+                    thumbImg.setAttribute('onselectstart', 'return false');
+                    thumbImg.setAttribute('ondragstart', 'return false');
+                    thumbImg.onerror = function() {
+                        this.parentElement.innerHTML = '<div class="w-full h-full bg-gray-200 flex items-center justify-center">?</div>';
+                    };
+                    
+                    // Small watermark for thumbnails
+                    const thumbWatermark = document.createElement('div');
+                    thumbWatermark.className = 'watermark';
+                    thumbWatermark.textContent = 'T';
+                    thumbWatermark.style.cssText = `
+                        position: absolute;
+                        top: 50%;
+                        left: 50%;
+                        transform: translate(-50%, -50%) rotate(-45deg);
+                        font-size: 12px;
+                        font-weight: bold;
+                        color: rgba(255, 255, 255, 0.6);
+                        text-shadow: 1px 1px 2px rgba(0,0,0,0.7);
+                        pointer-events: none;
+                        user-select: none;
+                        z-index: 10;
+                        font-family: Arial, sans-serif;
                     `;
+                    
+                    thumbContainer.appendChild(thumbImg);
+                    thumbContainer.appendChild(thumbWatermark);
+                    thumbnail.appendChild(thumbContainer);
                     thumbnailNav.appendChild(thumbnail);
                 });
             }
@@ -500,9 +590,71 @@
             }
         }
 
+        // Initialize image protection for album page
+        function initAlbumProtection() {
+            // Disable right-click context menu
+            document.addEventListener('contextmenu', function(e) {
+                e.preventDefault();
+                showProtectionMessage('Right-click is disabled to protect content');
+                return false;
+            });
+
+            // Disable keyboard shortcuts for saving/copying
+            document.addEventListener('keydown', function(e) {
+                if (e.ctrlKey && (e.key === 's' || e.key === 'a' || e.key === 'c' || e.key === 'u')) {
+                    e.preventDefault();
+                    showProtectionMessage('This action is disabled to protect content');
+                    return false;
+                }
+                
+                if (e.key === 'F12' || (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'J'))) {
+                    e.preventDefault();
+                    showProtectionMessage('Developer tools are disabled');
+                    return false;
+                }
+
+                if (e.key === 'PrintScreen') {
+                    e.preventDefault();
+                    showProtectionMessage('Screenshots are disabled to protect content');
+                    return false;
+                }
+            });
+        }
+
+        function showProtectionMessage(message) {
+            let msgDiv = document.getElementById('album-protection-message');
+            if (!msgDiv) {
+                msgDiv = document.createElement('div');
+                msgDiv.id = 'album-protection-message';
+                msgDiv.style.cssText = `
+                    position: fixed;
+                    top: 50%;
+                    left: 50%;
+                    transform: translate(-50%, -50%);
+                    background: rgba(0,0,0,0.9);
+                    color: white;
+                    padding: 20px;
+                    border-radius: 10px;
+                    z-index: 10000;
+                    text-align: center;
+                    font-size: 16px;
+                    font-weight: bold;
+                `;
+                document.body.appendChild(msgDiv);
+            }
+            
+            msgDiv.textContent = message;
+            msgDiv.style.display = 'block';
+            
+            setTimeout(() => {
+                msgDiv.style.display = 'none';
+            }, 2000);
+        }
+
         // Initialize the album gallery when page loads
         let albumGallery;
         document.addEventListener('DOMContentLoaded', function() {
+            initAlbumProtection();
             albumGallery = new AlbumGallery();
         });
     </script>
