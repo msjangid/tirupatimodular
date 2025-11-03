@@ -488,6 +488,17 @@
     </script>
     
     <script src="js/chatbot.js"></script>
+    <script>
+        // Initialize Divyanshi chatbot
+        document.addEventListener('DOMContentLoaded', function() {
+            try {
+                new TirupatiChatbot();
+                console.log('✅ Divyanshi chatbot initialized successfully');
+            } catch (error) {
+                console.error('❌ Error initializing chatbot:', error);
+            }
+        });
+    </script>
 
     <!-- WhatsApp Chat Button -->
     <a href="https://wa.me/917207534088?text=Hello%2C%20I%20would%20like%20to%20know%20more%20about%20your%20services."
@@ -498,5 +509,12 @@
         </svg>
         Chat on WhatsApp
     </a>
+
+    <!-- Universal PDF Answering System -->
+    <script src="js/universal-pdf-answering.js"></script>
+    <!-- PDF Knowledge Extractor (Fallback) -->
+    <script src="js/pdf-knowledge-extractor.js"></script>
+    <!-- Enhanced Chatbot -->
+    <script src="js/chatbot.js"></script>
 </body>
 </html>

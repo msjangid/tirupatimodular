@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chatbot Admin Panel - Tirupati Traders</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .admin-card {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 24px;
+            margin-bottom: 24px;
+        }
+        .stat-box {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+        }
+        .user-row {
+            display: grid;
+            grid-template-columns: 1fr 2fr 1fr 1fr 120px;
+            gap: 15px;
+            align-items: center;
+            padding: 12px;
+            border-bottom: 1px solid #eee;
+        }
+        .user-row:hover {
+            background-color: #f8f9fa;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 min-h-screen">
+    <!-- Navigation -->
+    <nav class="bg-blue-600 text-white p-4 shadow-lg">
+        <div class="container mx-auto flex justify-between items-center">
+            <h1 class="text-2xl font-bold">Tirupati Chatbot Admin Panel</h1>
+            <div class="flex gap-4">
+                <button onclick="refreshData()" class="bg-blue-500 hover:bg-blue-700 px-4 py-2 rounded">
+                    🔄 Refresh
+                </button>
+                <button onclick="exportAllData()" class="bg-green-500 hover:bg-green-700 px-4 py-2 rounded">
+                    📥 Export All
+                </button>
+                <a href="index.html" class="bg-gray-500 hover:bg-gray-700 px-4 py-2 rounded">
+                    🏠 Home
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mx-auto p-6">
+        <!-- Statistics Overview -->
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+            <div class="stat-box">
+                <div class="text-3xl font-bold" id="totalUsers">0</div>
+                <div class="text-sm opacity-90">Total Users</div>
+            </div>
+            <div class="stat-box">
+                <div class="text-3xl font-bold" id="totalSessions">0</div>
+                <div class="text-sm opacity-90">Total Sessions</div>
+            </div>
+            <div class="stat-box">
+                <div class="text-3xl font-bold" id="totalMessages">0</div>
+                <div class="text-sm opacity-90">Total Messages</div>
+            </div>
+            <div class="stat-box">
+                <div class="text-3xl font-bold" id="todaySessions">0</div>
+                <div class="text-sm opacity-90">Today's Sessions</div>
+            </div>
+        </div>
+
+        <!-- User Data Management -->
+        <div class="admin-card">
+            <h2 class="text-2xl font-bold mb-6 text-gray-800">📊 User Data Management</h2>
+            
+            <!-- Search and Filter -->
+            <div class="mb-6 flex gap-4">
+                <input type="text" id="searchUsers" placeholder="Search users..." 
+                       class="flex-1 px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                <select id="filterPeriod" class="px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <option value="all">All Time</option>
+                    <option value="today">Today</option>
+                    <option value="week">This Week</option>
+                    <option value="month">This Month</option>
+                </select>
+                <button onclick="clearAllData()" class="bg-red-500 hover:bg-red-700 text-white px-4 py-2 rounded-lg">
+                    🗑️ Clear All
+                </button>
+            </div>
+
+            <!-- Users Table Header -->
+            <div class="user-row bg-gray-200 font-semibold rounded-t-lg">
+                <div>Name</div>
+                <div>Contact Info</div>
+                <div>Sessions</div>
+                <div>Last Seen</div>
+                <div>Actions</div>
+            </div>
+
+            <!-- Users List -->
+            <div id="usersList" class="border rounded-b-lg bg-white">
+                <!-- Users will be loaded here -->
+            </div>
+        </div>
+
+        <!-- Chat Analytics -->
+        <div class="admin-card">
+            <h2 class="text-2xl font-bold mb-6 text-gray-800">📈 Chat Analytics</h2>
+            <div id="analyticsContent">
+                <!-- Analytics will be loaded here -->
+            </div>
+        </div>
+
+        <!-- Recent Activity -->
+        <div class="admin-card">
+            <h2 class="text-2xl font-bold mb-6 text-gray-800">⏰ Recent Activity</h2>
+            <div id="recentActivity" class="space-y-4">
+                <!-- Recent activity will be loaded here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- User Details Modal -->
+    <div id="userModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
+        <div class="bg-white rounded-lg p-6 m-4 max-w-4xl w-full max-h-screen overflow-auto">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-xl font-bold" id="modalUserName">User Details</h3>
+                <button onclick="closeUserModal()" class="text-gray-500 hover:text-gray-700 text-2xl">&times;</button>
+            </div>
+            <div id="modalContent">
+                <!-- User details will be loaded here -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let allUsersData = [];
+        let allSessionsData = [];
+
+        // Initialize admin panel
+        document.addEventListener('DOMContentLoaded', function() {
+            loadAllData();
+            setupEventListeners();
+        });
+
+        function setupEventListeners() {
+            document.getElementById('searchUsers').addEventListener('input', filterUsers);
+            document.getElementById('filterPeriod').addEventListener('change', filterUsers);
+        }
+
+        function loadAllData() {
+            try {
+                // Load all user data from localStorage
+                const users = [];
+                const sessions = [];
+                
+                // Get all localStorage keys that contain user data
+                for (let i = 0; i < localStorage.length; i++) {
+                    const key = localStorage.key(i);
+                    if (key.startsWith('tirupati_user')) {
+                        try {
+                            const userData = JSON.parse(localStorage.getItem(key));
+                            if (userData && userData.email) {
+                                users.push(userData);
+                            }
+                        } catch (e) {
+                            console.error('Error parsing user data:', e);
+                        }
+                    }
+                    if (key.startsWith('tirupati_sessions')) {
+                        try {
+                            const sessionData = JSON.parse(localStorage.getItem(key));
+                            if (sessionData && Array.isArray(sessionData)) {
+                                sessions.push(...sessionData);
+                            }
+                        } catch (e) {
+                            console.error('Error parsing session data:', e);
+                        }
+                    }
+                }
+
+                allUsersData = users;
+                allSessionsData = sessions;
+                
+                updateStatistics();
+                displayUsers();
+                displayAnalytics();
+                displayRecentActivity();
+                
+            } catch (error) {
+                console.error('Error loading data:', error);
+            }
+        }
+
+        function updateStatistics() {
+            const totalUsers = allUsersData.length;
+            const totalSessions = allSessionsData.length;
+            const totalMessages = allSessionsData.reduce((sum, session) => sum + (session.messages ? session.messages.length : 0), 0);
+            
+            const today = new Date().toDateString();
+            const todaySessions = allSessionsData.filter(session => 
+                new Date(session.startTime).toDateString() === today
+            ).length;
+
+            document.getElementById('totalUsers').textContent = totalUsers;
+            document.getElementById('totalSessions').textContent = totalSessions;
+            document.getElementById('totalMessages').textContent = totalMessages;
+            document.getElementById('todaySessions').textContent = todaySessions;
+        }
+
+        function displayUsers() {
+            const usersList = document.getElementById('usersList');
+            const searchTerm = document.getElementById('searchUsers').value.toLowerCase();
+            const filterPeriod = document.getElementById('filterPeriod').value;
+            
+            let filteredUsers = allUsersData.filter(user => {
+                const matchesSearch = !searchTerm || 
+                    user.name.toLowerCase().includes(searchTerm) ||
+                    user.email.toLowerCase().includes(searchTerm) ||
+                    user.contact.includes(searchTerm);
+                
+                let matchesPeriod = true;
+                if (filterPeriod !== 'all' && user.lastSeen) {
+                    const lastSeen = new Date(user.lastSeen);
+                    const now = new Date();
+                    
+                    switch (filterPeriod) {
+                        case 'today':
+                            matchesPeriod = lastSeen.toDateString() === now.toDateString();
+                            break;
+                        case 'week':
+                            const weekAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
+                            matchesPeriod = lastSeen >= weekAgo;
+                            break;
+                        case 'month':
+                            const monthAgo = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
+                            matchesPeriod = lastSeen >= monthAgo;
+                            break;
+                    }
+                }
+                
+                return matchesSearch && matchesPeriod;
+            });
+
+            if (filteredUsers.length === 0) {
+                usersList.innerHTML = '<div class="p-8 text-center text-gray-500">No users found</div>';
+                return;
+            }
+
+            usersList.innerHTML = filteredUsers.map(user => `
+                <div class="user-row">
+                    <div>
+                        <div class="font-semibold">${user.name || 'N/A'}</div>
+                        <div class="text-sm text-gray-500">Reg: ${user.registrationDate ? new Date(user.registrationDate).toLocaleDateString() : 'N/A'}</div>
+                    </div>
+                    <div>
+                        <div class="text-sm">${user.email || 'N/A'}</div>
+                        <div class="text-sm text-gray-500">${user.contact || 'N/A'}</div>
+                    </div>
+                    <div class="text-center">
+                        <div class="font-semibold">${user.totalSessions || 0}</div>
+                        <div class="text-sm text-gray-500">sessions</div>
+                    </div>
+                    <div class="text-sm">
+                        ${user.lastSeen ? new Date(user.lastSeen).toLocaleDateString() : 'Never'}
+                    </div>
+                    <div class="flex gap-2">
+                        <button onclick="viewUserDetails('${user.email}')" class="bg-blue-500 text-white px-2 py-1 rounded text-sm hover:bg-blue-600">
+                            View
+                        </button>
+                        <button onclick="deleteUser('${user.email}')" class="bg-red-500 text-white px-2 py-1 rounded text-sm hover:bg-red-600">
+                            Delete
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function displayAnalytics() {
+            const analyticsContent = document.getElementById('analyticsContent');
+            
+            // Calculate analytics
+            const totalMessages = allSessionsData.reduce((sum, session) => sum + (session.messages ? session.messages.length : 0), 0);
+            const avgMessagesPerSession = totalMessages / Math.max(allSessionsData.length, 1);
+            
+            // Messages by day
+            const messagesByDay = {};
+            allSessionsData.forEach(session => {
+                if (session.messages) {
+                    session.messages.forEach(msg => {
+                        const day = new Date(msg.timestamp).toDateString();
+                        messagesByDay[day] = (messagesByDay[day] || 0) + 1;
+                    });
+                }
+            });
+            
+            const last7Days = Array.from({length: 7}, (_, i) => {
+                const date = new Date();
+                date.setDate(date.getDate() - i);
+                return date.toDateString();
+            }).reverse();
+            
+            analyticsContent.innerHTML = `
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div class="bg-blue-50 p-4 rounded-lg">
+                        <h4 class="font-semibold text-blue-800">Average Messages/Session</h4>
+                        <p class="text-2xl font-bold text-blue-600">${avgMessagesPerSession.toFixed(1)}</p>
+                    </div>
+                    <div class="bg-green-50 p-4 rounded-lg">
+                        <h4 class="font-semibold text-green-800">Active Days</h4>
+                        <p class="text-2xl font-bold text-green-600">${Object.keys(messagesByDay).length}</p>
+                    </div>
+                    <div class="bg-purple-50 p-4 rounded-lg">
+                        <h4 class="font-semibold text-purple-800">Peak Day</h4>
+                        <p class="text-2xl font-bold text-purple-600">
+                            ${Object.keys(messagesByDay).length > 0 ? 
+                                Object.entries(messagesByDay).sort(([,a], [,b]) => b - a)[0][1] + ' msgs' : 
+                                '0 msgs'}
+                        </p>
+                    </div>
+                </div>
+                
+                <div class="mt-6">
+                    <h4 class="font-semibold mb-3">Messages Last 7 Days</h4>
+                    <div class="grid grid-cols-7 gap-2">
+                        ${last7Days.map(day => `
+                            <div class="bg-gray-100 p-2 rounded text-center">
+                                <div class="text-xs text-gray-600">${new Date(day).toLocaleDateString('en', {weekday: 'short'})}</div>
+                                <div class="font-semibold">${messagesByDay[day] || 0}</div>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+            `;
+        }
+
+        function displayRecentActivity() {
+            const recentActivity = document.getElementById('recentActivity');
+            
+            // Get recent sessions (last 10)
+            const recentSessions = allSessionsData
+                .sort((a, b) => new Date(b.startTime) - new Date(a.startTime))
+                .slice(0, 10);
+            
+            if (recentSessions.length === 0) {
+                recentActivity.innerHTML = '<div class="text-gray-500 text-center py-8">No recent activity</div>';
+                return;
+            }
+            
+            recentActivity.innerHTML = recentSessions.map(session => {
+                const user = allUsersData.find(u => u.email === session.userInfo?.email);
+                const messageCount = session.messages ? session.messages.length : 0;
+                
+                return `
+                    <div class="bg-gray-50 p-4 rounded-lg flex justify-between items-center">
+                        <div>
+                            <div class="font-semibold">${session.userInfo?.name || 'Unknown User'}</div>
+                            <div class="text-sm text-gray-600">${messageCount} messages exchanged</div>
+                            <div class="text-xs text-gray-500">${new Date(session.startTime).toLocaleString()}</div>
+                        </div>
+                        <div class="text-right">
+                            <div class="text-sm text-gray-600">${session.userInfo?.email || 'N/A'}</div>
+                            <button onclick="viewUserDetails('${session.userInfo?.email}')" class="text-blue-500 text-sm hover:underline">
+                                View Details
+                            </button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function filterUsers() {
+            displayUsers();
+        }
+
+        function refreshData() {
+            loadAllData();
+            alert('Data refreshed successfully!');
+        }
+
+        function exportAllData() {
+            const allData = {
+                users: allUsersData,
+                sessions: allSessionsData,
+                exportDate: new Date().toISOString(),
+                statistics: {
+                    totalUsers: allUsersData.length,
+                    totalSessions: allSessionsData.length,
+                    totalMessages: allSessionsData.reduce((sum, session) => sum + (session.messages ? session.messages.length : 0), 0)
+                }
+            };
+            
+            const blob = new Blob([JSON.stringify(allData, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `tirupati_chatbot_data_${new Date().toISOString().split('T')[0]}.json`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            
+            alert('All data exported successfully!');
+        }
+
+        function clearAllData() {
+            if (confirm('Are you sure you want to clear ALL chatbot data? This action cannot be undone.')) {
+                if (confirm('This will delete all user data, chat history, and sessions. Are you absolutely sure?')) {
+                    localStorage.removeItem('tirupati_user');
+                    localStorage.removeItem('tirupati_sessions');
+                    
+                    // Clear any additional user data
+                    const keysToRemove = [];
+                    for (let i = 0; i < localStorage.length; i++) {
+                        const key = localStorage.key(i);
+                        if (key.startsWith('tirupati_')) {
+                            keysToRemove.push(key);
+                        }
+                    }
+                    keysToRemove.forEach(key => localStorage.removeItem(key));
+                    
+                    allUsersData = [];
+                    allSessionsData = [];
+                    
+                    loadAllData();
+                    alert('All data cleared successfully!');
+                }
+            }
+        }
+
+        function viewUserDetails(email) {
+            const user = allUsersData.find(u => u.email === email);
+            const userSessions = allSessionsData.filter(s => s.userInfo?.email === email);
+            
+            if (!user) {
+                alert('User not found');
+                return;
+            }
+            
+            document.getElementById('modalUserName').textContent = `${user.name} - Detailed View`;
+            
+            const totalMessages = userSessions.reduce((sum, session) => sum + (session.messages ? session.messages.length : 0), 0);
+            
+            document.getElementById('modalContent').innerHTML = `
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <h4 class="font-semibold mb-3">User Information</h4>
+                        <div class="bg-gray-50 p-4 rounded space-y-2">
+                            <div><strong>Name:</strong> ${user.name}</div>
+                            <div><strong>Email:</strong> ${user.email}</div>
+                            <div><strong>Contact:</strong> ${user.contact}</div>
+                            <div><strong>Registration:</strong> ${user.registrationDate ? new Date(user.registrationDate).toLocaleString() : 'N/A'}</div>
+                            <div><strong>Last Seen:</strong> ${user.lastSeen ? new Date(user.lastSeen).toLocaleString() : 'Never'}</div>
+                            <div><strong>Total Sessions:</strong> ${user.totalSessions || 0}</div>
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <h4 class="font-semibold mb-3">Activity Summary</h4>
+                        <div class="bg-gray-50 p-4 rounded space-y-2">
+                            <div><strong>Sessions:</strong> ${userSessions.length}</div>
+                            <div><strong>Total Messages:</strong> ${totalMessages}</div>
+                            <div><strong>Avg Messages/Session:</strong> ${(totalMessages / Math.max(userSessions.length, 1)).toFixed(1)}</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="mt-6">
+                    <h4 class="font-semibold mb-3">Chat Sessions</h4>
+                    <div class="max-h-96 overflow-auto">
+                        ${userSessions.length > 0 ? userSessions.map((session, index) => `
+                            <div class="border rounded-lg p-4 mb-4 bg-gray-50">
+                                <div class="flex justify-between items-center mb-2">
+                                    <h5 class="font-medium">Session ${userSessions.length - index}</h5>
+                                    <span class="text-sm text-gray-600">${new Date(session.startTime).toLocaleString()}</span>
+                                </div>
+                                <div class="text-sm text-gray-600 mb-3">
+                                    Messages: ${session.messages ? session.messages.length : 0}
+                                </div>
+                                <div class="max-h-40 overflow-auto space-y-2">
+                                    ${session.messages ? session.messages.map(msg => `
+                                        <div class="text-sm p-2 rounded ${msg.type === 'user' ? 'bg-blue-100 text-right' : 'bg-white'}">
+                                            <div class="font-medium">${msg.type === 'user' ? 'User' : 'Divyanshi'}:</div>
+                                            <div>${msg.message}</div>
+                                            <div class="text-xs text-gray-500 mt-1">${new Date(msg.timestamp).toLocaleTimeString()}</div>
+                                        </div>
+                                    `).join('') : '<div class="text-gray-500">No messages in this session</div>'}
+                                </div>
+                            </div>
+                        `).join('') : '<div class="text-gray-500 py-8 text-center">No chat sessions found</div>'}
+                    </div>
+                </div>
+            `;
+            
+            document.getElementById('userModal').classList.remove('hidden');
+            document.getElementById('userModal').classList.add('flex');
+        }
+
+        function closeUserModal() {
+            document.getElementById('userModal').classList.add('hidden');
+            document.getElementById('userModal').classList.remove('flex');
+        }
+
+        function deleteUser(email) {
+            if (confirm(`Are you sure you want to delete user with email: ${email}?`)) {
+                // Remove user data
+                allUsersData = allUsersData.filter(u => u.email !== email);
+                allSessionsData = allSessionsData.filter(s => s.userInfo?.email !== email);
+                
+                // Update localStorage
+                localStorage.removeItem('tirupati_user');
+                if (allUsersData.length > 0) {
+                    localStorage.setItem('tirupati_user', JSON.stringify(allUsersData[0])); // Keep the first user as active
+                }
+                localStorage.setItem('tirupati_sessions', JSON.stringify(allSessionsData));
+                
+                loadAllData();
+                alert('User deleted successfully!');
+            }
+        }
+    </script>
+</body>
+</html>

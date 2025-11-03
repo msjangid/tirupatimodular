@@ -283,8 +283,22 @@
     </div>
 
     <script src="js/script.js"></script>
+    <!-- Universal PDF Answering System -->
+    <script src="js/universal-pdf-answering.js"></script>
+    <!-- PDF Knowledge Extractor (Fallback) -->
+    <script src="js/pdf-knowledge-extractor.js"></script>
     <script src="js/chatbot.js"></script>
     <script>
+        // Initialize Divyanshi chatbot
+        document.addEventListener('DOMContentLoaded', function() {
+            try {
+                new TirupatiChatbot();
+                console.log('✅ Divyanshi chatbot initialized successfully');
+            } catch (error) {
+                console.error('❌ Error initializing chatbot:', error);
+            }
+        });
+
         // Album-specific JavaScript
         class AlbumGallery {
             constructor() {
