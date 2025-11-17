@@ -418,21 +418,7 @@
 
             applyManifest(manifest) {
                 for (const [id, images] of Object.entries(manifest)) {
-                    // Adjust image paths for GitHub Pages if needed
-                    const adjustedImages = images.map(img => {
-                        // If we're on GitHub Pages (URL contains github.io or /tirupatimodular/)
-                        const isGitHub = window.location.hostname.includes('github.io') || window.location.pathname.includes('tirupatimodular');
-                        if (isGitHub && !img.startsWith('http')) {
-                            // Get the base path from current URL
-                            const pathParts = window.location.pathname.split('/');
-                            const repoIndex = pathParts.findIndex(p => p === 'tirupatimodular');
-                            if (repoIndex >= 0) {
-                                return img; // Already relative, will work fine
-                            }
-                        }
-                        return img;
-                    });
-                    this.categoryImages[id] = adjustedImages;
+                    this.categoryImages[id] = images || [];
                 }
                 
                 // Set initial images
@@ -441,9 +427,30 @@
                 }
             }
 
+            getImagePath(imagePath) {
+                // Ensure correct path resolution for both local and GitHub Pages
+                if (!imagePath) return '';
+                
+                // If already an absolute URL, return as-is
+                if (imagePath.startsWith('http')) return imagePath;
+                
+                // For relative paths, ensure they start with / or are relative to current directory
+                if (imagePath.startsWith('/')) return imagePath;
+                
+                // For GitHub Pages, paths should work as-is since we're at root level
+                return imagePath;
+            }
+
             loadImages() {
                 const carousel = document.getElementById('albumCarousel');
                 carousel.innerHTML = '';
+                
+                // Debug: Log current images
+                console.log(`Loading ${this.images.length} images for category: ${this.currentCategory}`);
+                if (this.images.length === 0) {
+                    carousel.innerHTML = '<div class="w-full h-full flex items-center justify-center text-gray-500 text-lg">No images in this category</div>';
+                    return;
+                }
                 
                 this.images.forEach((src, index) => {
                     const imageDiv = document.createElement('div');

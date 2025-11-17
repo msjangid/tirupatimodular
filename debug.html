@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Gallery Debug Info</title>
+    <style>
+        body { font-family: Arial; margin: 20px; background: #f5f5f5; }
+        .info { background: white; padding: 20px; margin: 10px 0; border-radius: 5px; }
+        .category { margin: 10px 0; padding: 10px; border-left: 4px solid #007bff; }
+        .error { color: red; font-weight: bold; }
+        .success { color: green; font-weight: bold; }
+        .loading { color: orange; }
+    </style>
+</head>
+<body>
+    <h1>Gallery Diagnostic Information</h1>
+    
+    <div class="info">
+        <h2>Location Info</h2>
+        <p><strong>Current URL:</strong> <span id="url"></span></p>
+        <p><strong>Hostname:</strong> <span id="hostname"></span></p>
+        <p><strong>Pathname:</strong> <span id="pathname"></span></p>
+    </div>
+    
+    <div class="info">
+        <h2>Manifest Status</h2>
+        <p id="manifest-status" class="loading">Loading manifest...</p>
+        <div id="manifest-content"></div>
+    </div>
+    
+    <div class="info">
+        <h2>Image Accessibility Test</h2>
+        <div id="image-test"></div>
+    </div>
+
+    <script>
+        // Location info
+        document.getElementById('url').textContent = window.location.href;
+        document.getElementById('hostname').textContent = window.location.hostname;
+        document.getElementById('pathname').textContent = window.location.pathname;
+
+        // Fetch and display manifest
+        fetch('images-manifest.json')
+            .then(r => r.json())
+            .then(manifest => {
+                let html = '<div class="success">✓ Manifest loaded successfully</div>';
+                html += '<table border="1" cellpadding="10" style="width:100%; margin-top:10px;">';
+                html += '<tr><th>Category</th><th>Images</th><th>Sample Image</th></tr>';
+                
+                for (const [cat, images] of Object.entries(manifest)) {
+                    const sampleImg = images[0] || 'N/A';
+                    html += `<tr><td>${cat}</td><td>${images.length}</td><td>${sampleImg}</td></tr>`;
+                }
+                html += '</table>';
+                
+                document.getElementById('manifest-status').innerHTML = html;
+                testImages(manifest);
+            })
+            .catch(e => {
+                document.getElementById('manifest-status').innerHTML = `<span class="error">✗ Failed to load manifest: ${e.message}</span>`;
+            });
+
+        // Test image accessibility
+        function testImages(manifest) {
+            let html = '<table border="1" cellpadding="10" style="width:100%;">';
+            html += '<tr><th>Category</th><th>Image</th><th>Status</th></tr>';
+            
+            const categories = Object.keys(manifest).slice(0, 3); // Test first 3 categories
+            let testedCount = 0;
+            
+            for (const cat of categories) {
+                const images = manifest[cat];
+                const testImg = images[0];
+                
+                const img = new Image();
+                img.onload = () => {
+                    testedCount++;
+                    updateTestResult(cat, testImg, 'success', '✓ Found');
+                };
+                img.onerror = () => {
+                    testedCount++;
+                    updateTestResult(cat, testImg, 'error', '✗ Not Found');
+                };
+                img.src = testImg;
+                
+                html += `<tr><td>${cat}</td><td>${testImg}</td><td id="test-${cat}" class="loading">Testing...</td></tr>`;
+            }
+            html += '</table>';
+            document.getElementById('image-test').innerHTML = html;
+        }
+
+        function updateTestResult(category, image, status, message) {
+            const el = document.getElementById(`test-${category}`);
+            if (el) {
+                el.className = status;
+                el.textContent = message;
+            }
+        }
+    </script>
+</body>
+</html>
