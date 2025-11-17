@@ -13,10 +13,10 @@ app.use(express.static('./'));
 app.post('/save-contact', (req, res) => {
     try {
         const contactData = req.body;
-        const filePath = path.join(__dirname, 'assets', 'contact', 'contact_us.xlsx');
+        const filePath = path.join(__dirname, 'Assets', 'contact', 'contact_us.xlsx');
         
         // Create contacts directory if it doesn't exist
-        const dir = path.join(__dirname, 'assets', 'contact');
+        const dir = path.join(__dirname, 'Assets', 'contact');
         if (!fs.existsSync(dir)) {
             fs.mkdirSync(dir, { recursive: true });
         }
