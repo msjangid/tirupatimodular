@@ -326,7 +326,7 @@
                     // Create image
                     const img = document.createElement('img');
                     img.src = src;
-                    img.alt = 'Gallery image';
+                    img.alt = `Page ${index + 1}`;
                     img.className = 'album-image max-w-full max-h-full object-contain cursor-pointer clickable';
                     img.onclick = () => this.openFullscreen(index);
                     img.draggable = false;
@@ -398,7 +398,7 @@
                     
                     const thumbImg = document.createElement('img');
                     thumbImg.src = src;
-                    thumbImg.alt = 'Image thumbnail';
+                    thumbImg.alt = `Thumbnail ${index + 1}`;
                     thumbImg.className = 'w-full h-full object-cover clickable';
                     thumbImg.onclick = () => this.goToImage(index);
                     thumbImg.draggable = false;
