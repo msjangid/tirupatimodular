@@ -137,6 +137,25 @@
 
     <!-- Album Gallery -->
     <section class="container mx-auto px-4 py-8">
+        <!-- Category Selection -->
+        <div class="mb-6 bg-white rounded-lg p-4 shadow-md">
+            <h3 class="font-semibold text-gray-800 mb-4">Select Category</h3>
+            <div class="flex flex-wrap gap-3" id="categoryFilter">
+                <button class="category-btn px-4 py-2 rounded-lg font-medium transition-all duration-300 bg-purple-600 text-white hover:bg-purple-700 active" data-category="album">
+                    All Photos
+                </button>
+                <button class="category-btn px-4 py-2 rounded-lg font-medium transition-all duration-300 bg-gray-200 text-gray-700 hover:bg-gray-300" data-category="Bedroom">
+                    Bedroom
+                </button>
+                <button class="category-btn px-4 py-2 rounded-lg font-medium transition-all duration-300 bg-gray-200 text-gray-700 hover:bg-gray-300" data-category="Drawingroom">
+                    Drawing Room
+                </button>
+                <button class="category-btn px-4 py-2 rounded-lg font-medium transition-all duration-300 bg-gray-200 text-gray-700 hover:bg-gray-300" data-category="Kitchen">
+                    Kitchen
+                </button>
+            </div>
+        </div>
+
         <!-- Gallery Info -->
         <div class="flex flex-col sm:flex-row justify-between items-center mb-6 bg-white rounded-lg p-4 shadow-md">
             <div class="flex items-center space-x-3 mb-4 sm:mb-0">
@@ -292,6 +311,13 @@
                 this.images = [];
                 this.isPlaying = false;
                 this.slideInterval = null;
+                this.currentCategory = 'album';
+                this.categoryImages = {
+                    'album': [],
+                    'Bedroom': [],
+                    'Drawingroom': [],
+                    'Kitchen': []
+                };
                 this.init();
             }
 
@@ -304,10 +330,23 @@
             }
 
             generateImageList() {
-                // Generate all 102 images from Page1.jpg to Page102.jpg
+                // Generate all 102 images from Page1.jpg to Page102.jpg for album
+                this.categoryImages['album'] = [];
                 for (let i = 1; i <= 102; i++) {
-                    this.images.push(`main/album/Page${i}.jpg`);
+                    this.categoryImages['album'].push(`main/album/Page${i}.jpg`);
                 }
+                
+                // Generate images for other categories (checking multiple pages if available)
+                const categories = ['Bedroom', 'Drawingroom', 'Kitchen'];
+                categories.forEach(category => {
+                    this.categoryImages[category] = [];
+                    // Try to load images from 1 to 200 to be safe
+                    for (let i = 1; i <= 200; i++) {
+                        this.categoryImages[category].push(`main/${category}/Page${i}.jpg`);
+                    }
+                });
+                
+                this.images = this.categoryImages['album'];
             }
 
             loadImages() {
@@ -539,6 +578,14 @@
             }
 
             bindEvents() {
+                // Category filter buttons
+                document.querySelectorAll('.category-btn').forEach(btn => {
+                    btn.addEventListener('click', () => {
+                        const category = btn.dataset.category;
+                        this.switchCategory(category);
+                    });
+                });
+                
                 // Navigation buttons
                 document.getElementById('nextAlbumBtn').addEventListener('click', () => this.nextImage());
                 document.getElementById('prevAlbumBtn').addEventListener('click', () => this.prevImage());
@@ -588,6 +635,27 @@
                         });
                     });
                 }
+            }
+
+            switchCategory(category) {
+                this.stopSlideshow();
+                this.currentCategory = category;
+                this.currentIndex = 0;
+                this.images = this.categoryImages[category];
+                
+                // Update button styles
+                document.querySelectorAll('.category-btn').forEach(btn => {
+                    if (btn.dataset.category === category) {
+                        btn.className = 'category-btn px-4 py-2 rounded-lg font-medium transition-all duration-300 bg-purple-600 text-white hover:bg-purple-700 active';
+                    } else {
+                        btn.className = 'category-btn px-4 py-2 rounded-lg font-medium transition-all duration-300 bg-gray-200 text-gray-700 hover:bg-gray-300';
+                    }
+                });
+                
+                this.loadImages();
+                this.loadThumbnails();
+                this.updateCarouselPosition();
+                this.updateInfo();
             }
         }
 
