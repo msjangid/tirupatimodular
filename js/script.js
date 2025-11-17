@@ -217,11 +217,9 @@ class Carousel {
         }
 
         this.images = [
-            'Assets/images/carousel1.jpg',
             'Assets/images/carousel2.JPG',
             'Assets/images/carousel3.JPG',
-            'Assets/images/carousel4.jpg',
-            'Assets/images/carousel5.JPG'
+            'Assets/images/carousel4.jpg'
         ];
 
         this.init();
@@ -665,3 +663,4 @@ document.addEventListener('DOMContentLoaded', () => {
         closeZoomBtn.addEventListener('click', closeZoomModal);
     }
 });
+
