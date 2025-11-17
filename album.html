@@ -318,37 +318,53 @@
 
             async loadCategories() {
                 try {
+                    // Try PHP endpoint first (for local/server with PHP)
+                    let data;
+                    try {
+                        const response = await fetch('get-images.php?action=categories');
+                        if (response.ok) {
+                            data = await response.json();
+                            this.categories = data.categories || [];
+                            return;
+                        }
+                    } catch (e) {
+                        console.log('PHP endpoint not available, trying manifest...');
+                    }
+                    
+                    // Fallback to static manifest (for GitHub Pages)
                     const response = await fetch('images-manifest.json');
-                    const data = await response.json();
+                    if (!response.ok) throw new Error('Manifest not found');
                     
-                    // Convert manifest to categories array
-                    this.categories = Object.keys(data).map(categoryId => ({
-                        id: categoryId,
-                        name: this.formatCategoryName(categoryId),
-                        count: data[categoryId].length
-                    }));
+                    const manifest = await response.json();
                     
-                    // Sort with 'album' first
+                    // Convert manifest to categories format
+                    this.categories = [];
+                    for (const [id, images] of Object.entries(manifest)) {
+                        this.categories.push({
+                            id: id,
+                            name: this.formatCategoryName(id),
+                            count: images.length
+                        });
+                    }
+                    
+                    // Keep 'album' first, then sort others
                     this.categories.sort((a, b) => {
-                        if (a.id === 'album') return -1;
-                        if (b.id === 'album') return 1;
+                        if (a.id.toLowerCase() === 'album') return -1;
+                        if (b.id.toLowerCase() === 'album') return 1;
                         return a.name.localeCompare(b.name);
                     });
                     
-                    // Store the manifest data for quick access
-                    this.imageManifest = data;
                 } catch (error) {
                     console.error('Error loading categories:', error);
                     this.categories = [];
-                    this.imageManifest = {};
                 }
             }
 
-            formatCategoryName(categoryId) {
-                return categoryId
-                    .split(/(?=[A-Z])/)
-                    .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
-                    .join(' ');
+            formatCategoryName(id) {
+                // Format: 'Bedroom' -> 'Bedroom', 'ceilling' -> 'Ceiling', etc.
+                if (id.toLowerCase() === 'ceilling') return 'Ceiling';
+                if (id.toLowerCase() === 'misc') return 'Miscellaneous';
+                return id.charAt(0).toUpperCase() + id.slice(1).toLowerCase();
             }
 
             renderCategoryButtons() {
@@ -366,21 +382,48 @@
             }
 
             async generateImageList() {
-                // Use the manifest data to build category images
-                for (const category of this.categories) {
-                    if (this.imageManifest[category.id]) {
-                        this.categoryImages[category.id] = this.imageManifest[category.id].map(
-                            filename => `main/${category.id}/${filename}`
-                        );
-                    } else {
-                        this.categoryImages[category.id] = [];
+                try {
+                    // Try PHP endpoint first
+                    let manifest;
+                    try {
+                        const response = await fetch('get-images.php?action=categories');
+                        if (response.ok) {
+                            const data = await response.json();
+                            // Build manifest from PHP response
+                            manifest = {};
+                            for (const cat of data.categories) {
+                                const imgResponse = await fetch(`get-images.php?category=${cat.id}`);
+                                const imgData = await imgResponse.json();
+                                manifest[cat.id] = imgData.images || [];
+                            }
+                            this.applyManifest(manifest);
+                            return;
+                        }
+                    } catch (e) {
+                        console.log('PHP endpoint not available, using manifest...');
                     }
+                    
+                    // Fallback to static manifest
+                    const response = await fetch('images-manifest.json');
+                    if (!response.ok) throw new Error('Manifest not found');
+                    
+                    manifest = await response.json();
+                    this.applyManifest(manifest);
+                    
+                } catch (error) {
+                    console.error('Error loading images:', error);
+                    this.categoryImages = {};
+                }
+            }
+
+            applyManifest(manifest) {
+                for (const [id, images] of Object.entries(manifest)) {
+                    this.categoryImages[id] = images || [];
                 }
                 
-                // Set initial images to first category
+                // Set initial images
                 if (this.categories.length > 0) {
-                    this.images = this.categoryImages[this.categories[0].id];
-                    this.currentCategory = this.categories[0].id;
+                    this.images = this.categoryImages[this.categories[0].id] || [];
                 }
             }
 
