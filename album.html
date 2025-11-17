@@ -418,7 +418,21 @@
 
             applyManifest(manifest) {
                 for (const [id, images] of Object.entries(manifest)) {
-                    this.categoryImages[id] = images || [];
+                    // Adjust image paths for GitHub Pages if needed
+                    const adjustedImages = images.map(img => {
+                        // If we're on GitHub Pages (URL contains github.io or /tirupatimodular/)
+                        const isGitHub = window.location.hostname.includes('github.io') || window.location.pathname.includes('tirupatimodular');
+                        if (isGitHub && !img.startsWith('http')) {
+                            // Get the base path from current URL
+                            const pathParts = window.location.pathname.split('/');
+                            const repoIndex = pathParts.findIndex(p => p === 'tirupatimodular');
+                            if (repoIndex >= 0) {
+                                return img; // Already relative, will work fine
+                            }
+                        }
+                        return img;
+                    });
+                    this.categoryImages[id] = adjustedImages;
                 }
                 
                 // Set initial images
