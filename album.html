@@ -141,18 +141,7 @@
         <div class="mb-6 bg-white rounded-lg p-4 shadow-md">
             <h3 class="font-semibold text-gray-800 mb-4">Select Category</h3>
             <div class="flex flex-wrap gap-3" id="categoryFilter">
-                <button class="category-btn px-4 py-2 rounded-lg font-medium transition-all duration-300 bg-purple-600 text-white hover:bg-purple-700 active" data-category="album">
-                    All Photos
-                </button>
-                <button class="category-btn px-4 py-2 rounded-lg font-medium transition-all duration-300 bg-gray-200 text-gray-700 hover:bg-gray-300" data-category="Bedroom">
-                    Bedroom
-                </button>
-                <button class="category-btn px-4 py-2 rounded-lg font-medium transition-all duration-300 bg-gray-200 text-gray-700 hover:bg-gray-300" data-category="Drawingroom">
-                    Drawing Room
-                </button>
-                <button class="category-btn px-4 py-2 rounded-lg font-medium transition-all duration-300 bg-gray-200 text-gray-700 hover:bg-gray-300" data-category="Kitchen">
-                    Kitchen
-                </button>
+                <!-- Categories will be loaded dynamically by JavaScript -->
             </div>
         </div>
 
@@ -312,41 +301,62 @@
                 this.isPlaying = false;
                 this.slideInterval = null;
                 this.currentCategory = 'album';
-                this.categoryImages = {
-                    'album': [],
-                    'Bedroom': [],
-                    'Drawingroom': [],
-                    'Kitchen': []
-                };
+                this.categories = [];
+                this.categoryImages = {};
                 this.init();
             }
 
-            init() {
-                this.generateImageList();
+            async init() {
+                await this.loadCategories();
+                await this.generateImageList();
+                this.renderCategoryButtons();
                 this.loadImages();
                 this.loadThumbnails();
                 this.bindEvents();
                 this.updateInfo();
             }
 
-            generateImageList() {
-                // Generate all 102 images from Page1.jpg to Page102.jpg for album
-                this.categoryImages['album'] = [];
-                for (let i = 1; i <= 102; i++) {
-                    this.categoryImages['album'].push(`main/album/Page${i}.jpg`);
+            async loadCategories() {
+                try {
+                    const response = await fetch('get-images.php?action=categories');
+                    const data = await response.json();
+                    this.categories = data.categories || [];
+                } catch (error) {
+                    console.error('Error loading categories:', error);
+                    this.categories = [];
+                }
+            }
+
+            renderCategoryButtons() {
+                const categoryFilter = document.getElementById('categoryFilter');
+                categoryFilter.innerHTML = '';
+                
+                this.categories.forEach((cat, index) => {
+                    const button = document.createElement('button');
+                    button.className = `category-btn px-4 py-2 rounded-lg font-medium transition-all duration-300 ${index === 0 ? 'bg-purple-600 text-white hover:bg-purple-700 active' : 'bg-gray-200 text-gray-700 hover:bg-gray-300'}`;
+                    button.dataset.category = cat.id;
+                    button.textContent = `${cat.name} (${cat.count})`;
+                    button.addEventListener('click', () => this.switchCategory(cat.id));
+                    categoryFilter.appendChild(button);
+                });
+            }
+
+            async generateImageList() {
+                for (const category of this.categories) {
+                    try {
+                        const response = await fetch(`get-images.php?category=${category.id}`);
+                        const data = await response.json();
+                        this.categoryImages[category.id] = data.images || [];
+                    } catch (error) {
+                        console.error(`Error loading images for ${category.id}:`, error);
+                        this.categoryImages[category.id] = [];
+                    }
                 }
                 
-                // Generate images for other categories (checking multiple pages if available)
-                const categories = ['Bedroom', 'Drawingroom', 'Kitchen'];
-                categories.forEach(category => {
-                    this.categoryImages[category] = [];
-                    // Try to load images from 1 to 200 to be safe
-                    for (let i = 1; i <= 200; i++) {
-                        this.categoryImages[category].push(`main/${category}/Page${i}.jpg`);
-                    }
-                });
-                
-                this.images = this.categoryImages['album'];
+                // Set initial images to first category
+                if (this.categories.length > 0) {
+                    this.images = this.categoryImages[this.categories[0].id];
+                }
             }
 
             loadImages() {
@@ -652,10 +662,19 @@
                     }
                 });
                 
-                this.loadImages();
-                this.loadThumbnails();
-                this.updateCarouselPosition();
-                this.updateInfo();
+                // Show loading state if no images
+                if (!this.images || this.images.length === 0) {
+                    const carousel = document.getElementById('albumCarousel');
+                    carousel.innerHTML = '<div class="w-full h-full flex items-center justify-center text-gray-500 text-lg">No images found in this category</div>';
+                    const thumbnailNav = document.getElementById('thumbnailNav');
+                    thumbnailNav.innerHTML = '';
+                    this.updateInfo();
+                } else {
+                    this.loadImages();
+                    this.loadThumbnails();
+                    this.updateCarouselPosition();
+                    this.updateInfo();
+                }
             }
         }
 
