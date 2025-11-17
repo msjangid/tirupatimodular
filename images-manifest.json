@@ -1,14 +1,22 @@
 {
   "Bedroom": [
-    "Page28.jpg",
-    "Page29.jpg",
-    "Page32.jpg",
-    "Page36.jpg",
-    "Page37.jpg",
-    "Page43.jpg",
-    "Page44.jpg",
-    "Page45.jpg",
-    "Page55.jpg"
+"Page100.jpg",
+"Page31.jpg",
+"Page32.jpg",
+"Page33.jpg",
+"Page37.jpg",
+"Page41.jpg",
+"Page42.jpg",
+"Page48.jpg",
+"Page49.jpg",
+"Page83.jpg",
+"Page84.jpg",
+"Page87.jpg",
+"Page91.jpg",
+"Page92.jpg",
+"Page93.jpg",
+"Page98.jpg",
+"Page99.jpg"
   ],
   "Kitchen": [
     "Page19.jpg",
@@ -151,3 +159,4 @@
     "Page57.jpg"
   ]
 }
+
