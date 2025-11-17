@@ -220,6 +220,7 @@ class Carousel {
             'Assets/images/carousel2.JPG',
             'Assets/images/carousel3.JPG',
             'Assets/images/carousel4.jpg'
+            
         ];
 
         this.init();
@@ -386,7 +387,7 @@ class ProductGrid {
             { name: 'Living Room', image: 'Assets/images/Page2.jpg', price: 'Custom' },
             { name: 'Living Room', image: 'Assets/images/Page3.jpg', price: 'Custom' },
             { name: 'Room Ceilling', image: 'Assets/images/Page5.jpg', price: 'Custom' },
-            { name: 'Room Ceilling', image: 'Assets/images/Page14.jpg', price: 'Custom' },
+            { name: 'Wooden Ceilling', image: 'Assets/images/Page14.jpg', price: 'Custom' },
             { name: 'Room Ceilling', image: 'Assets/images/Page53.jpg', price: 'Custom' },
             { name: 'Room Ceilling', image: 'Assets/images/Page54.jpg', price: 'Custom' },
             { name: 'Accessory', image: 'Assets/images/Page15.jpg', price: 'Custom' },
@@ -663,4 +664,3 @@ document.addEventListener('DOMContentLoaded', () => {
         closeZoomBtn.addEventListener('click', closeZoomModal);
     }
 });
-
