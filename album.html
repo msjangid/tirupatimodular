@@ -361,10 +361,13 @@
             }
 
             formatCategoryName(id) {
-                // Format: 'Bedroom' -> 'Bedroom', 'ceilling' -> 'Ceiling', etc.
-                if (id.toLowerCase() === 'ceilling') return 'Ceiling';
-                if (id.toLowerCase() === 'misc') return 'Miscellaneous';
-                return id.charAt(0).toUpperCase() + id.slice(1).toLowerCase();
+                // Format: 'bedroom' -> 'Bedroom', 'drawing' -> 'Drawing Room', etc.
+                const nameMap = {
+                    'bedroom': 'Bedroom',
+                    'drawing': 'Drawing Room',
+                    'kitchen': 'Kitchen'
+                };
+                return nameMap[id.toLowerCase()] || id.charAt(0).toUpperCase() + id.slice(1);
             }
 
             renderCategoryButtons() {

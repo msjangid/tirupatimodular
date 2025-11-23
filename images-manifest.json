@@ -1,29 +1,27 @@
 {
-  "Bedroom": [
-    "main/Bedroom/Page31.jpg",
-    "main/Bedroom/Page33.jpg",
-    "main/Bedroom/Page41.jpg",
-    "main/Bedroom/Page42.jpg",
-    "main/Bedroom/Page48.jpg",
-    "main/Bedroom/Page83.jpg",
-    "main/Bedroom/Page87.jpg",
-    "main/Bedroom/Page99.jpg"
+  "bedroom": [
+    "main/bedroom/Page31.jpg",
+    "main/bedroom/Page33.jpg",
+    "main/bedroom/Page41.jpg",
+    "main/bedroom/Page42.jpg",
+    "main/bedroom/Page48.jpg",
+    "main/bedroom/Page49.jpg",
+    "main/bedroom/Page83.jpg",
+    "main/bedroom/Page87.jpg",
+    "main/bedroom/Page99.jpg"
   ],
-   
-  "Kitchen": [
-    "main/Kitchen/Page23.jpg",
-    "main/Kitchen/Page24.jpg",
-    "main/Kitchen/Page75.jpg"
+  "drawing": [
+    "main/drawing/Page16.jpg",
+    "main/drawing/Page20.jpg",
+    "main/drawing/Page57.jpg",
+    "main/drawing/Page58.jpg",
+    "main/drawing/Page59.jpg",
+    "main/drawing/Page6.jpg",
+    "main/drawing/Page8.jpg"
   ],
- 
-  "Drawingroom": [
-    "main/Drawingroom/Page16.jpg",
-    "main/Drawingroom/Page20.jpg",
-    "main/Drawingroom/Page57.jpg",
-    "main/Drawingroom/Page58.jpg",
-    "main/Drawingroom/Page59.jpg",
-    "main/Drawingroom/Page6.jpg",
-    "main/Drawingroom/Page8.jpg"
+  "kitchen": [
+    "main/kitchen/Page23.jpg",
+    "main/kitchen/Page24.jpg",
+    "main/kitchen/Page75.jpg"
   ]
 }
-
