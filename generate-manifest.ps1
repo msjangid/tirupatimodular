@@ -1,5 +1,5 @@
 $output = @{}
-$categories = @("album", "Bedroom", "ceilling", "dining", "Drawingroom", "Kitchen", "misc")
+$categories = @("Bedroom", "Drawingroom", "Kitchen")
 
 foreach ($cat in $categories) {
     $path = ".\main\$cat"
@@ -20,3 +20,4 @@ $json = ConvertTo-Json -InputObject $output -Depth 100
 $json | Out-File -FilePath "images-manifest.json" -Encoding UTF8 -Force
 
 Write-Host "`n✓ Manifest generated successfully!"
+
